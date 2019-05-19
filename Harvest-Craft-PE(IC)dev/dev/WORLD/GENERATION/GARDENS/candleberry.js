@@ -1,0 +1,1 @@
+var CandleberryGardenCount = {	min: __config__.access("generation.group.gardens.candleberry.min"),	max: __config__.access("generation.group.gardens.candleberry.max")};Harvest.addBlockGeneration({id:BlockID.candleberrygarden, data:0, enabled:true},CandleberryGardenBiomes,CandleberryGardenCount,__config__.access("generation.numbers.gardens.candleberry"));

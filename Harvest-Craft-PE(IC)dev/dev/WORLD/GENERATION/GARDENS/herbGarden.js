@@ -1,0 +1,1 @@
+var HerbGardenCount = {	min: __config__.access("generation.group.gardens.herb.min"),	max: __config__.access("generation.group.gardens.herb.max")};Harvest.addBlockGeneration({id:BlockID.herbgarden, data:0, enabled:true},HerbGardenBiomes,HerbGardenCount,__config__.access("generation.numbers.gardens.herb"));
