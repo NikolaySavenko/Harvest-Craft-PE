@@ -2,7 +2,7 @@
 BUILD INFO:
   dir: dev
   target: main.js
-  files: 69
+  files: 70
 */
 
 
@@ -15,181 +15,263 @@ IMPORT("Harvest_Core");
 
 
 
+// file: API/ICRenderLib.js
+
+if (!ICRenderLib){
+    var ICRenderLib = {
+        /* model registry */
+        tileModels: {},
+        
+        registerTileModel: function(convertedId, model){
+            this.tileModels[convertedId] = model;
+        },
+        
+        /* output */
+        writeAllData: function(){
+            var output = "";
+            var count = 0;
+            for (var id in this.tileModels){
+                output += this.tileModels[id].writeAsId(id) + "\n\n";
+                count++;
+            }
+            
+            output = count + "\n\n" + output;
+            FileTools.WriteText("games/com.mojang/mods/icrender", output);
+        },
+        
+        /* connection groups functions */
+        connectionGroups: {},
+        
+        addConnectionBlockWithData: function(name, blockId, blockData){
+            var group = this.connectionGroups[name];
+            if (!group){
+                group = {};
+                this.connectionGroups[name] = group;
+            }
+            
+            group[blockId * 16 + blockData] = true;
+        },
+        
+        addConnectionBlock: function(name, blockId){
+            for (var data = 0; data < 16; data++){
+                this.addConnectionBlockWithData(name, blockId, data);
+            }
+        },
+        
+        addConnectionGroup: function(name, blockIds){
+            for (var i in blockIds){
+                this.addConnectionBlock(name, blockIds[i]);
+            }
+        },
+        
+        getConnectionGroup: function(name){
+            return this.connectionGroups[name];
+        },
+        
+        
+        /* standart models */
+        registerAsWire: function(id, connectionGroupName, width){
+            width = width || 0.5;
+            
+            var model = new TileRenderModel(id, 0);
+            model.addConnectionGroup(connectionGroupName);
+            model.addSelfConnection();
+            model.setConnectionWidth(width);
+            model.addBox(.5 - width / 2.0, .5 - width / 2.0, .5 - width / 2.0, {
+                x: width,
+                y: width,
+                z: width,
+            });
+            
+            this.addConnectionBlock(connectionGroupName, id);
+        }
+    };
+    
+    
+    ModAPI.registerAPI("ICRenderLib", ICRenderLib);
+    Callback.addCallback("PostLoaded", function(){
+        ICRenderLib.writeAllData();
+    });
+}
+
+
+
+
 // file: API/Prototypes.js
 
-﻿var BLOCK_TYPE_CANDLE = Block.createSpecialType({
-	base: 50,
-	opaque: false,
-	lightopacity: 0,
-	lightlevel: 10 
+var BLOCK_TYPE_CANDLE = Block.createSpecialType({
+    base: 50,
+    opaque: false,
+    lightopacity: 0,
+    lightlevel: 10 
 });  
 var ForestryAPI = modsAPI.ForestryAPI;
 
 var particles = __config__.access("other.particles");
 CropRegistry.registerClass("harvestcraft_crop");
 CropRegistry.registerClassConfig("harvestcraft_crop",{
-	ageSpeed:__config__.access("other.ageSpeed.crops"),
-	manure:{id:351,data:15},
-	farmland:[{id:60,data:0},{id:60,data:7}],
-	seedsPlaceFunc:true,
-	growStages:3,
-	supportAgricraft:true
+    ageSpeed:__config__.access("other.ageSpeed.crops"),
+    manure:{id:351,data:15},
+    farmland:[{id:60,data:0},{id:60,data:7}],
+    seedsPlaceFunc:true,
+    growStages:3,
+    supportAgricraft:true
 });
 CropRegistry.setRegularFunctionsForClass("harvestcraft_crop",__config__.access("other.growChance.crops"),particles);
 CropRegistry.registerClassDeriveFunction("harvestcraft_crop",function(classs,idd){
-	Recipes.addFurnaceFuel(CropRegistry.getSeedFromCrop(idd), 0, 60);
-	var cfg = CropRegistry.getConfigFromCrop(idd);
-	Harvest.registerDroppingBlock(idd);
-	Block.setDestroyLevelForID (idd, 0);
-	Block.setDestroyTime (idd,0); 
-	ToolAPI.registerBlockMaterial(idd, "plant");
-	Block.setRandomTickCallback(idd,function(x,y,z,id,data){
-		for(var f in cfg.farmland){
-			if(World.getBlockID(x,y-1,z)!=cfg.farmland[f].id&&World.getBlockData(x,y-1,z)!=cfg.farmland[f].data){
-				World.destroyBlock(x,y,z,true);
-			}
-		}
-		var chance = cfg.ageSpeed;
-		if(Math.random()<chance&&data<2){
-			World.setBlock(x,y,z,id,data+1);
-		}
-	});
-	Block.registerDropFunction(idd, function(coords, blockID, blockData, level){
-		return[[ CropRegistry.getSeedFromCrop(idd), 1,0 ]];
-	});
-	if(ForestryAPI){
-		for(var m = 0;m<3;m++){	
-			ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(idd+':'+m);
-		}
-	}
+    Recipes.addFurnaceFuel(CropRegistry.getSeedFromCrop(idd), 0, 60);
+    var cfg = CropRegistry.getConfigFromCrop(idd);
+    Harvest.registerDroppingBlock(idd);
+    Block.setDestroyLevelForID (idd, 0);
+    Block.setDestroyTime (idd,0); 
+    ToolAPI.registerBlockMaterial(idd, "plant");
+    Block.setRandomTickCallback(idd,function(x,y,z,id,data){
+        for(var f in cfg.farmland){
+            if(World.getBlockID(x,y-1,z)!=cfg.farmland[f].id&&World.getBlockData(x,y-1,z)!=cfg.farmland[f].data){
+                World.destroyBlock(x,y,z,true);
+            }
+        }
+        var chance = cfg.ageSpeed;
+        if(Math.random()<chance&&data<2){
+            World.setBlock(x,y,z,id,data+1);
+        }
+    });
+    Block.registerDropFunction(idd, function(coords, blockID, blockData, level){
+        return[[ CropRegistry.getSeedFromCrop(idd), 1,0 ]];
+    });
+    if(ForestryAPI){
+        for(var m = 0;m<3;m++){ 
+            ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(idd+':'+m);
+        }
+    }
 });
 
 
 CropRegistry.registerClass("harvestcraft_garden");
 CropRegistry.registerClassConfig("harvestcraft_garden",{
-	farmland:[{id:60,data:0},{id:2,data:0},{id:3,data:0},{id:60,data:7}],
-	seedsPlaceFunc:true
+    farmland:[{id:60,data:0},{id:2,data:0},{id:3,data:0},{id:60,data:7}],
+    seedsPlaceFunc:true
 });
 CropRegistry.registerClassDeriveFunction("harvestcraft_garden",function(classs,id){
-	Recipes.addFurnaceFuel(CropRegistry.getSeedFromCrop(id), 0, 120);
-	Block.setDestroyLevelForID (id, 0);
-	Block.setDestroyTime (id,0); 
-	ToolAPI.registerBlockMaterial(id, "plant");
-	Harvest.registerDroppingBlock(id);
-	Callback.addCallback("ItemUse", function(coords, item, block){
-		if(block.id==id){
-			Harvest.drop(CropRegistry.getSeedFromCrop(id),1,coords);
-			World.setBlock(coords.x,coords.y,coords.z,0,0);
-		}
-	});
-	if(ForestryAPI){
-		ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(id+':'+0);
-	}
+    Recipes.addFurnaceFuel(CropRegistry.getSeedFromCrop(id), 0, 120);
+    Block.setDestroyLevelForID (id, 0);
+    Block.setDestroyTime (id,0); 
+    ToolAPI.registerBlockMaterial(id, "plant");
+    Harvest.registerDroppingBlock(id);
+    Callback.addCallback("ItemUse", function(coords, item, block){
+        if(block.id==id){
+            Harvest.drop(CropRegistry.getSeedFromCrop(id),1,coords);
+            World.setBlock(coords.x,coords.y,coords.z,0,0);
+        }
+    });
+    if(ForestryAPI){
+        ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(id+':'+0);
+    }
 });
 
 
 CropRegistry.registerClass("harvestcraft_tropicalGarden");
 CropRegistry.registerClassConfig("harvestcraft_tropicalGarden",{
-	farmland:[{id:60,data:0},{id:2,data:0},{id:3,data:0},{id:60,data:7},{id:12,data:0}],
-	seedsPlaceFunc:true
+    farmland:[{id:60,data:0},{id:2,data:0},{id:3,data:0},{id:60,data:7},{id:12,data:0}],
+    seedsPlaceFunc:true
 });
 CropRegistry.registerClassDeriveFunction("harvestcraft_tropicalGarden",function(classs,id){
-	Recipes.addFurnaceFuel(CropRegistry.getSeedFromCrop(id), 0, 120);
-	Block.setDestroyLevelForID (id, 0);
-	Block.setDestroyTime (id,0); 
-	ToolAPI.registerBlockMaterial(id, "plant");
-	Harvest.registerDroppingBlock(id);
-	Callback.addCallback("ItemUse", function(coords, item, block){
-		if(block.id==id){
-			Harvest.drop(CropRegistry.getSeedFromCrop(id),1,coords);
-			World.setBlock(coords.x,coords.y,coords.z,0,0);
-		}
-	});
-	if(ForestryAPI){
-		ForestryAPI.BeeRegistry.FLOWERS_CACTI.push(id+':'+0);
-		ForestryAPI.BeeRegistry.FLOWERS_JUNGLE.push(id+':'+0);
-	}	
+    Recipes.addFurnaceFuel(CropRegistry.getSeedFromCrop(id), 0, 120);
+    Block.setDestroyLevelForID (id, 0);
+    Block.setDestroyTime (id,0); 
+    ToolAPI.registerBlockMaterial(id, "plant");
+    Harvest.registerDroppingBlock(id);
+    Callback.addCallback("ItemUse", function(coords, item, block){
+        if(block.id==id){
+            Harvest.drop(CropRegistry.getSeedFromCrop(id),1,coords);
+            World.setBlock(coords.x,coords.y,coords.z,0,0);
+        }
+    });
+    if(ForestryAPI){
+        ForestryAPI.BeeRegistry.FLOWERS_CACTI.push(id+':'+0);
+        ForestryAPI.BeeRegistry.FLOWERS_JUNGLE.push(id+':'+0);
+    }   
 });
 
 
 CropRegistry.registerClass("Harvestcraft_treeSapling");
 CropRegistry.registerClassConfig("Harvestcraft_treeSapling",{
-	ageSpeed:__config__.access("other.ageSpeed.saplings"),
-	manure:{id:351,data:15},
-	farmland:[{id:60,data:0},{id:2,data:0},{id:3,data:0},{id:60,data:7}],
-	seedsPlaceFunc:true
+    ageSpeed:__config__.access("other.ageSpeed.saplings"),
+    manure:{id:351,data:15},
+    farmland:[{id:60,data:0},{id:2,data:0},{id:3,data:0},{id:60,data:7}],
+    seedsPlaceFunc:true
 });
 CropRegistry.registerClassDeriveFunction("Harvestcraft_treeSapling",function(classs,idd){
-	Recipes.addFurnaceFuel(CropRegistry.getSeedFromCrop(idd), 0, 140);
-	var cfg = CropRegistry.getConfigFromCrop(idd);
-	PlantModel.tree(idd,0);
-	Block.setDestroyLevelForID (idd, 0);
-	Block.setDestroyTime (idd,0); 
-	ToolAPI.registerBlockMaterial(idd, "plant");
-	Harvest.registerDroppingBlock(idd);
-	Block.setRandomTickCallback(idd,function(x,y,z,id,data){
-		var chance = cfg.ageSpeed;
-		if(Math.random()<chance){
-			TreeRegistry.deployTree(x,y,z,TreeRegistry.getTreeFromSaplingBlock(idd));
-		}
-	});
-	Callback.addCallback("ItemUse",function(coords,item,block){
-		var manure = cfg.manure;
-		var chance = __config__.access("other.growChance.saplings");
-		if(item.id==manure.id&&item.data==manure.data&&block.id==idd){
-			if(Math.random()<chance){
-				TreeRegistry.deployTree(coords.x,coords.y,coords.z,TreeRegistry.getTreeFromSaplingBlock(idd));
-			}
-			if(particles){
-				for(var i = 0;i<particles;i++){
-					Particles.addParticle(Native.ParticleType.happyVillager, coords.x+Math.random()*.8,coords.y+Math.random()*.8,coords.z+Math.random()*.8,0,0,0,0)
-				}
-			}
-			Player.decreaseCarriedItem(1);
-		}
-	});
-	Block.registerDropFunction(idd, function(coords, blockID, blockData, level){
-		return[[ CropRegistry.getSeedFromCrop(idd), 1,0 ]];
-	});
-	if(ForestryAPI){
-		ForestryAPI.BeeRegistry.FLOWERS_JUNGLE.push(idd+':'+0);
-		ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(idd+':'+0);
-	}
+    Recipes.addFurnaceFuel(CropRegistry.getSeedFromCrop(idd), 0, 140);
+    var cfg = CropRegistry.getConfigFromCrop(idd);
+    PlantModel.tree(idd,0);
+    Block.setDestroyLevelForID (idd, 0);
+    Block.setDestroyTime (idd,0); 
+    ToolAPI.registerBlockMaterial(idd, "plant");
+    Harvest.registerDroppingBlock(idd);
+    Block.setRandomTickCallback(idd,function(x,y,z,id,data){
+        var chance = cfg.ageSpeed;
+        if(Math.random()<chance){
+            TreeRegistry.deployTree(x,y,z,TreeRegistry.getTreeFromSaplingBlock(idd));
+        }
+    });
+    Callback.addCallback("ItemUse",function(coords,item,block){
+        var manure = cfg.manure;
+        var chance = __config__.access("other.growChance.saplings");
+        if(item.id==manure.id&&item.data==manure.data&&block.id==idd){
+            if(Math.random()<chance){
+                TreeRegistry.deployTree(coords.x,coords.y,coords.z,TreeRegistry.getTreeFromSaplingBlock(idd));
+            }
+            if(particles){
+                for(var i = 0;i<particles;i++){
+                    Particles.addParticle(Native.ParticleType.happyVillager, coords.x+Math.random()*.8,coords.y+Math.random()*.8,coords.z+Math.random()*.8,0,0,0,0)
+                }
+            }
+            Player.decreaseCarriedItem(1);
+        }
+    });
+    Block.registerDropFunction(idd, function(coords, blockID, blockData, level){
+        return[[ CropRegistry.getSeedFromCrop(idd), 1,0 ]];
+    });
+    if(ForestryAPI){
+        ForestryAPI.BeeRegistry.FLOWERS_JUNGLE.push(idd+':'+0);
+        ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(idd+':'+0);
+    }
 });
 
 
 CropRegistry.registerClass("Harvestcraft_fruit");
 CropRegistry.registerClassConfig("Harvestcraft_fruit",{
-	ageSpeed:__config__.access("other.ageSpeed.fruits"),
-	manure:{id:351,data:15},
-	farmland:[{id:18,data:0}],
-	growStages:3
+    ageSpeed:__config__.access("other.ageSpeed.fruits"),
+    manure:{id:351,data:15},
+    farmland:[{id:18,data:0}],
+    growStages:3
 });
 CropRegistry.setRegularFunctionsForClass("Harvestcraft_fruit",__config__.access("other.growChance.fruits"),particles);
 CropRegistry.registerClassDeriveFunction("Harvestcraft_fruit",function(classs,idd){
-	var cfg = CropRegistry.getConfigFromCrop(idd);
-	PlantModel.fruit(idd);
-	Block.setDestroyLevelForID (idd, 0);
-	Block.setDestroyTime (idd,0); 
-	ToolAPI.registerBlockMaterial(idd, "plant");
-	Block.setRandomTickCallback(idd,function(x,y,z,id,data){
-		var chance = cfg.ageSpeed;
-		if(Math.random()<chance&&data<2){
-			World.setBlock(x,y,z,id,data+1);
-		}
-	});
-	Block.registerDropFunction(idd, function(coords, blockID, blockData, level){
-		return[[ 0, 0,0 ]];
-	});
-	if(ForestryAPI){
-		ForestryAPI.BeeRegistry.FLOWERS_JUNGLE.push(idd+':'+0);
-		ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(idd+':'+0);
-	}
+    var cfg = CropRegistry.getConfigFromCrop(idd);
+    PlantModel.fruit(idd);
+    Block.setDestroyLevelForID (idd, 0);
+    Block.setDestroyTime (idd,0); 
+    ToolAPI.registerBlockMaterial(idd, "plant");
+    Block.setRandomTickCallback(idd,function(x,y,z,id,data){
+        var chance = cfg.ageSpeed;
+        if(Math.random()<chance&&data<2){
+            World.setBlock(x,y,z,id,data+1);
+        }
+    });
+    Block.registerDropFunction(idd, function(coords, blockID, blockData, level){
+        return[[ 0, 0,0 ]];
+    });
+    if(ForestryAPI){
+        ForestryAPI.BeeRegistry.FLOWERS_JUNGLE.push(idd+':'+0);
+        ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(idd+':'+0);
+    }
 });
 //MIDDLE
 TreeRegistry.registerClass("Harvestcraft_middleFruitTree");
 TreeRegistry.registerClassConfig("Harvestcraft_middleFruitTree",{
-	fruitCount:7
+    fruitCount:7
 });
 
 var standartHarvestCraftTreePrototype = TreeRegistry.generateStandartTreePrototypeWithParams({leaves:{id:18,data:0},wood:{id:17,data:0}});
@@ -199,7 +281,7 @@ TreeRegistry.registerClassPrototype("Harvestcraft_middleFruitTree",standartHarve
 //JUNGLE
 TreeRegistry.registerClass("Harvestcraft_jungleFruitTree");
 TreeRegistry.registerClassConfig("Harvestcraft_jungleFruitTree",{
-	fruitCount:5
+    fruitCount:5
 });
 
 var jungleHarvestCraftTreePrototype = TreeRegistry.generateStandartTreePrototypeWithParams({leaves:{id:18,data:3},wood:{id:17,data:3}});
@@ -210,7 +292,7 @@ TreeRegistry.registerClassPrototype("Harvestcraft_jungleFruitTree",jungleHarvest
 //TAIGA
 TreeRegistry.registerClass("Harvestcraft_taigaFruitTree");
 TreeRegistry.registerClassConfig("Harvestcraft_taigaFruitTree",{
-	fruitCount:4
+    fruitCount:4
 });
 
 var taigaHarvestCraftTreePrototype = TreeRegistry.generateStandartTreePrototypeWithParams({leaves:{id:18,data:4},wood:{id:162,data:0}});
@@ -221,46 +303,46 @@ TreeRegistry.registerClassPrototype("Harvestcraft_taigaFruitTree",taigaHarvestCr
 /*
 var standartHarvestCraftTreePrototype = new TreePrototype();
 standartHarvestCraftTreePrototype.addStructure([
-	{
-		id:18,
-		data:0,
-		box:{
-			pos1:{x:-2,y:3,z:-2},
-			pos2:{x:2,y:4,z:2}
-		}
-	},
-	{
-		id:18,
-		data:0,
-		box:{
-			pos1:{x:-1,y:5,z:0},
-			pos2:{x:1,y:6,z:0}
-		}
-	},
-	{
-		id:18,
-		data:0,
-		box:{
-			pos1:{x:0,y:5,z:-1},
-			pos2:{x:0,y:6,z:1}
-		}
-	},
-	{
-		id:17,
-		data:0,
-		box:{
-			pos1:{x:0,y:0,z:0},
-			pos2:{x:0,y:5,z:0}
-		}
-	}
+    {
+        id:18,
+        data:0,
+        box:{
+            pos1:{x:-2,y:3,z:-2},
+            pos2:{x:2,y:4,z:2}
+        }
+    },
+    {
+        id:18,
+        data:0,
+        box:{
+            pos1:{x:-1,y:5,z:0},
+            pos2:{x:1,y:6,z:0}
+        }
+    },
+    {
+        id:18,
+        data:0,
+        box:{
+            pos1:{x:0,y:5,z:-1},
+            pos2:{x:0,y:6,z:1}
+        }
+    },
+    {
+        id:17,
+        data:0,
+        box:{
+            pos1:{x:0,y:0,z:0},
+            pos2:{x:0,y:5,z:0}
+        }
+    }
 ]);
 standartHarvestCraftTreePrototype.addFruitsArea([
-	{
-		box:{
-			pos1:{x:-2,y:2,z:-2}, 
-			pos2:{x:2,y:2,z:2}
-		}
-	}
+    {
+        box:{
+            pos1:{x:-2,y:2,z:-2}, 
+            pos2:{x:2,y:2,z:2}
+        }
+    }
 ]);*/
 
 
@@ -2135,12 +2217,13 @@ Callback.addCallback("PostLoaded", function(){
 
 IDRegistry.genBlockID("animalTrap"); 
 Block.createBlock("animalTrap", [
-	{name: "Animal trap", texture: [["animaltrap", 0]], inCreative: true}
+    {name: "Animal trap", texture: [["animaltrap", 0]], inCreative: true}
 ]);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.animalTrap);
+ICRenderLib.addConnectionBlock("bc-container", BlockID.animalTrap);
 Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.animalTrap, count: 1, data: 0}, ["aba", "sds","asa"], ["a", 280, 0, "b", 96, 0,"d",54,0,"s",287,0]);
+    Recipes.addShaped({id: BlockID.animalTrap, count: 1, data: 0}, ["aba", "sds","asa"], ["a", 280, 0, "b", 96, 0,"d",54,0,"s",287,0]);
 });
+    
 
 
 
@@ -3235,3 +3318,1760 @@ Block.createBlock("apricotTreeSapling", [
 	{name: "Apricot Tree Sapling", texture: [["empty", 0], ["empty", 0], ["apricotSapling", 0]], inCreative: false}
 ],BLOCK_TYPE_PLANT);
 CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.apricotTreeSapling,
+	seed:ItemID.apricotSapling
+});
+Harvest.recipe({id:ItemID.apricotSapling},[{id: ItemID.apricot, data: 0}, {id: 6, data: 3}]);
+
+//cherry
+IDRegistry.genBlockID("cherryTreeSapling");
+Block.createBlock("cherryTreeSapling", [
+	{name: "Cherry Tree Sapling", texture: [["empty", 0], ["empty", 0], ["cherrySapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.cherryTreeSapling,
+	seed:ItemID.cherrySapling
+});
+Harvest.recipe({id:ItemID.cherrySapling},[{id: ItemID.cherry, data: 0}, {id: 6, data: 0}]);
+
+//avocado
+IDRegistry.genBlockID("avocadoTreeSapling");
+Block.createBlock("avocadoTreeSapling", [
+	{name: "Avocado Tree Sapling", texture: [["empty", 0], ["empty", 0], ["avocadoSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.avocadoTreeSapling,
+	seed:ItemID.avocadoSapling
+});
+Harvest.recipe({id:ItemID.avocadoSapling},[{id: ItemID.avocado, data: 0}, {id: 6, data: 0}]);
+
+//banana
+IDRegistry.genBlockID("bananaTreeSapling");
+Block.createBlock("bananaTreeSapling", [
+	{name: "Banana Tree Sapling", texture: [["empty", 0], ["empty", 0], ["bananaSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.bananaTreeSapling,
+	seed:ItemID.bananaSapling
+});
+Harvest.recipe({id:ItemID.bananaSapling},[{id: ItemID.banana, data: 0}, {id: 6, data: 3}]);
+
+//date
+IDRegistry.genBlockID("dateTreeSapling");
+Block.createBlock("dateTreeSapling", [
+	{name: "Date Tree Sapling", texture: [["empty", 0], ["empty", 0], ["dateSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.dateTreeSapling,
+	seed:ItemID.dateSapling
+});
+Harvest.recipe({id:ItemID.dateSapling},[{id: ItemID.date, data: 0}, {id: 6, data: 3}]);
+
+//dragonfruit
+IDRegistry.genBlockID("dragonfruitTreeSapling");
+Block.createBlock("dragonfruitTreeSapling", [
+	{name: "Dragonfruit Tree Sapling", texture: [["empty", 0], ["empty", 0], ["dragonfruitSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.dragonfruitTreeSapling,
+	seed:ItemID.dragonfruitSapling
+});
+Harvest.recipe({id:ItemID.dragonfruitSapling},[{id: ItemID.dragonfruit, data: 0}, {id: 6, data: 3}]);
+
+//fig
+IDRegistry.genBlockID("figTreeSapling");
+Block.createBlock("figTreeSapling", [
+	{name: "Fig Tree Sapling", texture: [["empty", 0], ["empty", 0], ["figSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.figTreeSapling,
+	seed:ItemID.figSapling
+});
+Harvest.recipe({id:ItemID.figSapling},[{id: ItemID.fig, data: 0}, {id: 6, data: 3}]);
+
+//grapefruit
+IDRegistry.genBlockID("grapefruitTreeSapling");
+Block.createBlock("grapefruitTreeSapling", [
+	{name: "Grapefruit Tree Sapling", texture: [["empty", 0], ["empty", 0], ["grapefruitSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.grapefruitTreeSapling,
+	seed:ItemID.grapefruitSapling
+});
+Harvest.recipe({id:ItemID.grapefruitSapling},[{id: ItemID.grapefruit, data: 0}, {id: 6, data: 3}]);
+
+//gooseberry
+IDRegistry.genBlockID("gooseberryTreeSapling");
+Block.createBlock("gooseberryTreeSapling", [
+	{name: "Gooseberry Tree Sapling", texture: [["empty", 0], ["empty", 0], ["gooseberrySapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.gooseberryTreeSapling,
+	seed:ItemID.gooseberrySapling
+});
+Harvest.recipe({id:ItemID.gooseberrySapling},[{id: ItemID.gooseberry, data: 0}, {id: 6, data: 3}]);
+
+//lemon
+IDRegistry.genBlockID("lemonTreeSapling");
+Block.createBlock("lemonTreeSapling", [
+	{name: "Lemon Tree Sapling", texture: [["empty", 0], ["empty", 0], ["lemonSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.lemonTreeSapling,
+	seed:ItemID.lemonSapling
+});
+Harvest.recipe({id:ItemID.lemonSapling},[{id: ItemID.lemon, data: 0}, {id: 6, data: 3}]);
+
+//lime
+IDRegistry.genBlockID("limeTreeSapling");
+Block.createBlock("limeTreeSapling", [
+	{name: "Lime Tree Sapling", texture: [["empty", 0], ["empty", 0], ["limeSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.limeTreeSapling,
+	seed:ItemID.limeSapling
+});
+Harvest.recipe({id:ItemID.limeSapling},[{id: ItemID.lime, data: 0}, {id: 6, data: 3}]);
+
+//mango
+IDRegistry.genBlockID("mangoTreeSapling");
+Block.createBlock("mangoTreeSapling", [
+	{name: "Mango Tree Sapling", texture: [["empty", 0], ["empty", 0], ["mangoSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.mangoTreeSapling,
+	seed:ItemID.mangoSapling
+});
+Harvest.recipe({id:ItemID.mangoSapling},[{id: ItemID.mango, data: 0}, {id: 6, data: 3}]);
+
+//olive
+IDRegistry.genBlockID("oliveTreeSapling");
+Block.createBlock("oliveTreeSapling", [
+	{name: "Olive Tree Sapling", texture: [["empty", 0], ["empty", 0], ["oliveSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.oliveTreeSapling,
+	seed:ItemID.oliveSapling
+});
+Harvest.recipe({id:ItemID.oliveSapling},[{id: ItemID.olive, data: 0}, {id: 6, data: 3}]);
+
+//orange
+IDRegistry.genBlockID("orangeTreeSapling");
+Block.createBlock("orangeTreeSapling", [
+	{name: "Orange Tree Sapling", texture: [["empty", 0], ["empty", 0], ["orangeSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.orangeTreeSapling,
+	seed:ItemID.orangeSapling
+});
+Harvest.recipe({id:ItemID.orangeSapling},[{id: ItemID.orange, data: 0}, {id: 6, data: 3}]);
+
+//papaya
+IDRegistry.genBlockID("papayaTreeSapling");
+Block.createBlock("papayaTreeSapling", [
+	{name: "Papaya Tree Sapling", texture: [["empty", 0], ["empty", 0], ["papayaSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.papayaTreeSapling,
+	seed:ItemID.papayaSapling
+});
+Harvest.recipe({id:ItemID.orangeSapling},[{id: ItemID.papaya, data: 0}, {id: 6, data: 3}]);
+
+//peach
+IDRegistry.genBlockID("peachTreeSapling");
+Block.createBlock("peachTreeSapling", [
+	{name: "Peach Tree Sapling", texture: [["empty", 0], ["empty", 0], ["peachSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.peachTreeSapling,
+	seed:ItemID.peachSapling
+});
+Harvest.recipe({id:ItemID.peachSapling},[{id: ItemID.peach, data: 0}, {id: 6, data: 3}]);
+
+//pear
+IDRegistry.genBlockID("pearTreeSapling");
+Block.createBlock("pearTreeSapling", [
+	{name: "Pear Tree Sapling", texture: [["empty", 0], ["empty", 0], ["pearSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.pearTreeSapling,
+	seed:ItemID.pearSapling
+});
+Harvest.recipe({id:ItemID.peachSapling},[{id: ItemID.pear, data: 0}, {id: 6, data: 4}]);
+
+//persimmon
+IDRegistry.genBlockID("persimmonTreeSapling");
+Block.createBlock("persimmonTreeSapling", [
+	{name: "Persimmon Tree Sapling", texture: [["empty", 0], ["empty", 0], ["persimmonSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.persimmonTreeSapling,
+	seed:ItemID.persimmonSapling
+});
+Harvest.recipe({id:ItemID.persimmonSapling},[{id: ItemID.persimmon, data: 0}, {id: 6, data: 3}]);
+
+//plum
+IDRegistry.genBlockID("plumTreeSapling");
+Block.createBlock("plumTreeSapling", [
+	{name: "Plum Tree Sapling", texture: [["empty", 0], ["empty", 0], ["plumSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.plumTreeSapling,
+	seed:ItemID.plumSapling
+});
+Harvest.recipe({id:ItemID.plumSapling},[{id: ItemID.plum, data: 0}, {id: 6, data: 3}]);
+
+//pomegranate
+IDRegistry.genBlockID("pomegranateTreeSapling");
+Block.createBlock("pomegranateTreeSapling", [
+	{name: "Pomegranate Tree Sapling", texture: [["empty", 0], ["empty", 0], ["pomegranateSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.pomegranateTreeSapling,
+	seed:ItemID.pomegranateSapling
+});
+Harvest.recipe({id:ItemID.pomegranateSapling},[{id: ItemID.pomegranate, data: 0}, {id: 6, data: 3}]);
+
+//starfruit
+IDRegistry.genBlockID("starfruitTreeSapling");
+Block.createBlock("starfruitTreeSapling", [
+	{name: "Starfruit Tree Sapling", texture: [["empty", 0], ["empty", 0], ["starfruitSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.starfruitTreeSapling,
+	seed:ItemID.starfruitSapling
+});
+Harvest.recipe({id:ItemID.starfruitSapling},[{id: ItemID.starfruit, data: 0}, {id: 6, data: 3}]);
+
+//almond
+IDRegistry.genBlockID("almondTreeSapling");
+Block.createBlock("almondTreeSapling", [
+	{name: "Almond Tree Sapling", texture: [["empty", 0], ["empty", 0], ["almondSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.almondTreeSapling,
+	seed:ItemID.almondSapling
+});
+Harvest.recipe({id:ItemID.almondSapling},[{id: ItemID.almond, data: 0}, {id: 6, data: 3}]);
+
+//peppercorn
+IDRegistry.genBlockID("peppercornTreeSapling");
+Block.createBlock("peppercornTreeSapling", [
+	{name: "Peppercorn Tree Sapling", texture: [["empty", 0], ["empty", 0], ["peppercornSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.peppercornTreeSapling,
+	seed:ItemID.peppercornSapling
+});
+Harvest.recipe({id:ItemID.peppercornSapling},[{id: ItemID.peppercorn, data: 0}, {id: 6, data: 3}]);
+
+//cashew
+IDRegistry.genBlockID("cashewTreeSapling");
+Block.createBlock("cashewTreeSapling", [
+	{name: "Cashew Tree Sapling", texture: [["empty", 0], ["empty", 0], ["cashewSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.cashewTreeSapling,
+	seed:ItemID.cashewSapling
+});
+Harvest.recipe({id:ItemID.cashewSapling},[{id: ItemID.cashew, data: 0}, {id: 6, data: 3}]);
+
+//coconut
+IDRegistry.genBlockID("coconutTreeSapling");
+Block.createBlock("coconutTreeSapling", [
+	{name: "Coconut Tree Sapling", texture: [["empty", 0], ["empty", 0], ["coconutSapling", 0]], inCreative: false}
+],BLOCK_TYPE_PLANT);
+CropRegistry.deriveCropAsClass("Harvestcraft_treeSapling",{
+	id:BlockID.coconutTreeSapling,
+	seed:ItemID.coconutSapling
+});
+Harvest.recipe({id:ItemID.coconutSapling},[{id: ItemID.coconut, data: 0}, {id: 6, data: 3}]);
+
+
+
+
+// file: TREES/trees.js
+
+//apple
+TreeRegistry.deriveTreeAsClass("Harvestcraft_middleFruitTree",{
+	name:"apple",
+	sapling:{
+		block:BlockID.appleTreeSapling,
+		item:ItemID.appleSapling
+	},
+	fruit:{
+		block:BlockID.appleBlock,
+		item:260
+	}
+});
+
+//apricot
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"apricot",
+	sapling:{
+		block:BlockID.apricotTreeSapling,
+		item:ItemID.apricotSapling
+	},
+	fruit:{
+		block:BlockID.apricot,
+		item:ItemID.apricot
+	}
+});
+
+//cherry
+TreeRegistry.deriveTreeAsClass("Harvestcraft_middleFruitTree",{
+	name:"cherry",
+	sapling:{
+		block:BlockID.cherryTreeSapling,
+		item:ItemID.cherrySapling
+	},
+	fruit:{
+		block:BlockID.cherry,
+		item:ItemID.cherry
+	}
+});
+
+//avocado
+TreeRegistry.deriveTreeAsClass("Harvestcraft_middleFruitTree",{
+	name:"avocado",
+	sapling:{
+		block:BlockID.avocadoTreeSapling,
+		item:ItemID.avocadoSapling
+	},
+	fruit:{
+		block:BlockID.avocado,
+		item:ItemID.avocado
+	}
+});
+
+//banana
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"banana",
+	sapling:{
+		block:BlockID.bananaTreeSapling,
+		item:ItemID.bananaSapling
+	},
+	fruit:{
+		block:BlockID.banana,
+		item:ItemID.banana
+	}
+});
+
+//date
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"date",
+	sapling:{
+		block:BlockID.dateTreeSapling,
+		item:ItemID.dateSapling
+	},
+	fruit:{
+		block:BlockID.date,
+		item:ItemID.date
+	}
+});
+
+//dragonfruit
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"dragonfruit",
+	sapling:{
+		block:BlockID.dragonfruitTreeSapling,
+		item:ItemID.dragonfruitSapling
+	},
+	fruit:{
+		block:BlockID.dragonfruit,
+		item:ItemID.dragonfruit
+	}
+});
+
+//fig
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"fig",
+	sapling:{
+		block:BlockID.figTreeSapling,
+		item:ItemID.figSapling
+	},
+	fruit:{
+		block:BlockID.fig,
+		item:ItemID.fig
+	}
+});
+
+//grapefruit
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"grapefruit",
+	sapling:{
+		block:BlockID.grapefruitTreeSapling,
+		item:ItemID.grapefruitSapling
+	},
+	fruit:{
+		block:BlockID.grapefruit,
+		item:ItemID.grapefruit
+	}
+});
+
+//gooseberry
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"gooseberry",
+	sapling:{
+		block:BlockID.gooseberryTreeSapling,
+		item:ItemID.gooseberrySapling
+	},
+	fruit:{
+		block:BlockID.gooseberry,
+		item:ItemID.gooseberry
+	}
+});
+
+//lemon
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"lemon",
+	sapling:{
+		block:BlockID.lemonTreeSapling,
+		item:ItemID.lemonSapling
+	},
+	fruit:{
+		block:BlockID.lemon,
+		item:ItemID.lemon
+	}
+});
+
+//lime
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"lime",
+	sapling:{
+		block:BlockID.limeTreeSapling,
+		item:ItemID.limeSapling
+	},
+	fruit:{
+		block:BlockID.lime,
+		item:ItemID.lime
+	}
+});
+
+//mango
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"mango",
+	sapling:{
+		block:BlockID.mangoTreeSapling,
+		item:ItemID.mangoSapling
+	},
+	fruit:{
+		block:BlockID.mango,
+		item:ItemID.mango
+	}
+});
+
+//olive
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"olive",
+	sapling:{
+		block:BlockID.oliveTreeSapling,
+		item:ItemID.oliveSapling
+	},
+	fruit:{
+		block:BlockID.olive,
+		item:ItemID.olive
+	}
+});
+
+//orange
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"orange",
+	sapling:{
+		block:BlockID.orangeTreeSapling,
+		item:ItemID.orangeSapling
+	},
+	fruit:{
+		block:BlockID.orange,
+		item:ItemID.orange
+	}
+});
+
+//papaya
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"papaya",
+	sapling:{
+		block:BlockID.papayaTreeSapling,
+		item:ItemID.papayaSapling
+	},
+	fruit:{
+		block:BlockID.papaya,
+		item:ItemID.papaya
+	}
+});
+
+//peach
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"peach",
+	sapling:{
+		block:BlockID.peachTreeSapling,
+		item:ItemID.peachSapling
+	},
+	fruit:{
+		block:BlockID.peach,
+		item:ItemID.peach
+	}
+});
+
+//pear
+TreeRegistry.deriveTreeAsClass("Harvestcraft_taigaFruitTree",{
+	name:"pear",
+	sapling:{
+		block:BlockID.pearTreeSapling,
+		item:ItemID.pearSapling
+	},
+	fruit:{
+		block:BlockID.pear,
+		item:ItemID.pear
+	}
+});
+
+//persimmon
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"persimmon",
+	sapling:{
+		block:BlockID.persimmonTreeSapling,
+		item:ItemID.persimmonSapling
+	},
+	fruit:{
+		block:BlockID.persimmon,
+		item:ItemID.persimmon
+	}
+});
+
+//plum
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"plum",
+	sapling:{
+		block:BlockID.plumTreeSapling,
+		item:ItemID.plumSapling
+	},
+	fruit:{
+		block:BlockID.plum,
+		item:ItemID.plum
+	}
+});
+
+//pomegranate
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"pomegranate",
+	sapling:{
+		block:BlockID.pomegranateTreeSapling,
+		item:ItemID.pomegranateSapling
+	},
+	fruit:{
+		block:BlockID.pomegranate,
+		item:ItemID.pomegranate
+	}
+});
+
+//starfruit
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"starfruit",
+	sapling:{
+		block:BlockID.starfruitTreeSapling,
+		item:ItemID.starfruitSapling
+	},
+	fruit:{
+		block:BlockID.starfruit,
+		item:ItemID.starfruit
+	}
+});
+
+//almond
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"almond",
+	sapling:{
+		block:BlockID.almondTreeSapling,
+		item:ItemID.almondSapling
+	},
+	fruit:{
+		block:BlockID.almond,
+		item:ItemID.almond
+	}
+});
+
+//peppercorn
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"peppercorn",
+	sapling:{
+		block:BlockID.peppercornTreeSapling,
+		item:ItemID.peppercornSapling
+	},
+	fruit:{
+		block:BlockID.peppercornfruit,
+		item:ItemID.peppercorn
+	}
+});
+
+//cashew
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"cashew",
+	sapling:{
+		block:BlockID.cashewTreeSapling,
+		item:ItemID.cashewSapling
+	},
+	fruit:{
+		block:BlockID.cashew,
+		item:ItemID.cashew
+	}
+});
+
+//coconut
+TreeRegistry.deriveTreeAsClass("Harvestcraft_jungleFruitTree",{
+	name:"coconut",
+	sapling:{
+		block:BlockID.coconutTreeSapling,
+		item:ItemID.coconutSapling
+	},
+	fruit:{
+		block:BlockID.coconut,
+		item:ItemID.coconut
+	}
+});
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/biomes.js
+
+var SaltBiomes = [0,24,10];
+	//var SaltBiomes = __config__.access("generation.biomes.gardens.SaltBiomes");
+var BerryGardenBiomes = [1,4,3,132,129,34, 18, 27, 28,13];
+	//var BerryGardenBiomes = __config__.access("generation.biomes.gardens.BerryGardenBiomes");
+var CandleberryGardenBiomes = [1,4,3,132,129,34, 18, 27, 28,13];
+	//var CandleberryGardenBiomes = __config__.access("generation.biomes.gardens.CandleberryGardenBiomes");
+var DesertGardenBiomes =[2,35,37,135];
+	//var DesertGardenBiomes = __config__.access("generation.biomes.gardens.DesertGardenBiomes");
+var GourdGardenBiomes = [1,4,3,132,129,34, 18, 27, 28,13];
+	//var GourdGardenBiomes = __config__.access("generation.biomes.gardens.GourdGardenBiomes");
+var GrassGardenBiomes = [1,4,3,132,129,34, 18, 27, 28];
+	//var GrassGardenBiomes = __config__.access("generation.biomes.gardens.GrassGardenBiomes");
+var GroundGardenBiomes =[1,4,3,132,129,34,4, 18, 27, 28,13];
+	//var GroundGardenBiomes = __config__.access("generation.biomes.gardens.GroundGardenBiomes");
+var HerbGardenBiomes =  [1,4,3,132,129,34, 18, 27, 28];
+	//var HerbGardenBiomes = __config__.access("generation.biomes.gardens.HerbGardenBiomes");
+var LeafyGardenBiomes = [1,4,3,132,129,34, 18, 27, 28,13];
+	//var LeafyGardenBiomes = __config__.access("generation.biomes.gardens.LeafyGardenBiomes");
+var MushroomGardenBiomes = [1,4,3,132,129,34, 18, 27, 28];
+	//var MushroomGardenBiomes = __config__.access("generation.biomes.gardens.MushroomGardenBiomes");
+var StalkGardenBiomes = [1,4,3,132,129,34, 18, 27, 28];
+	//var StalkGardenBiomes = __config__.access("generation.biomes.gardens.StalkGardenBiomes");
+var TextileGardenBiomes = [1,4,3,132,129,34, 18, 27, 28];
+	//var TextileGardenBiomes = __config__.access("generation.biomes.gardens.TextileGardenBiomes");
+var TropicalGardenBiomes = [21, 22, 23, 149, 151,6, 134,36];
+	//var TropicalGardenBiomes = __config__.access("generation.biomes.gardens.TropicalGardenBiomes");
+var WaterGardenBiomes = [24,0];
+	//var WaterGardenBiomes = __config__.access("generation.biomes.gardens.WaterGardenBiomes");
+var FrostyGardenBiomes = [12,140,30,158,11,26];
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/berryGarden.js
+
+var BerryGardenCount = {
+	min: __config__.access("generation.group.gardens.berry.min"),
+	max: __config__.access("generation.group.gardens.berry.max")
+};
+Harvest.addBlockGeneration({id:BlockID.berrygarden, data:0, enabled:true},BerryGardenBiomes,BerryGardenCount,
+__config__.access("generation.numbers.gardens.berry"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/herbGarden.js
+
+var HerbGardenCount = {
+	min: __config__.access("generation.group.gardens.herb.min"),
+	max: __config__.access("generation.group.gardens.herb.max")
+};
+Harvest.addBlockGeneration({id:BlockID.herbgarden, data:0, enabled:true},HerbGardenBiomes,HerbGardenCount,
+__config__.access("generation.numbers.gardens.herb"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/grassGarden.js
+
+var GrassGardenCount = {
+	min: __config__.access("generation.group.gardens.grass.min"),
+	max: __config__.access("generation.group.gardens.grass.max")
+};
+Harvest.addBlockGeneration({id:BlockID.grassgarden, data:0, enabled:true},GrassGardenBiomes,GrassGardenCount,
+__config__.access("generation.numbers.gardens.grass"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/candleberry.js
+
+var CandleberryGardenCount = {
+	min: __config__.access("generation.group.gardens.candleberry.min"),
+	max: __config__.access("generation.group.gardens.candleberry.max")
+};
+Harvest.addBlockGeneration({id:BlockID.candleberrygarden, data:0, enabled:true},CandleberryGardenBiomes,CandleberryGardenCount,
+__config__.access("generation.numbers.gardens.candleberry"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/cottonGarden.js
+
+var TextileGardenCount = {
+	min: __config__.access("generation.group.gardens.cotton.min"),
+	max: __config__.access("generation.group.gardens.cotton.max")
+};
+Harvest.addBlockGeneration({id:BlockID.cottongarden, data:0, enabled:true},TextileGardenBiomes,TextileGardenCount,
+__config__.access("generation.numbers.gardens.cotton"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/aridGarden.js
+
+var AridGardenCount = {
+	min: __config__.access("generation.group.gardens.arid.min"),
+	max: __config__.access("generation.group.gardens.arid.max")
+};
+Harvest.addBlockGeneration({id:BlockID.aridgarden, data:0, enabled:true},DesertGardenBiomes,TextileGardenCount,
+__config__.access("generation.numbers.gardens.arid"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/tropicalGarden.js
+
+var TropicalGardenCount = {
+	min: __config__.access("generation.group.gardens.tropical.min"),
+	max: __config__.access("generation.group.gardens.tropical.max")
+};
+Harvest.addBlockGeneration({id:BlockID.tropicalgarden, data:0, enabled:true},TropicalGardenBiomes,TropicalGardenCount,
+__config__.access("generation.numbers.gardens.tropical"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/groundGarden.js
+
+var GroundGardenCount = {
+	min: __config__.access("generation.group.gardens.ground.min"),
+	max: __config__.access("generation.group.gardens.ground.max")
+};
+Harvest.addBlockGeneration({id:BlockID.groundgarden, data:0, enabled:true},GroundGardenBiomes,GroundGardenCount,
+__config__.access("generation.numbers.gardens.ground"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/stalkGarden.js
+
+var StalkGardenCount = {
+	min: __config__.access("generation.group.gardens.stalk.min"),
+	max: __config__.access("generation.group.gardens.stalk.max")
+};
+Harvest.addBlockGeneration({id:BlockID.stalkgarden, data:0, enabled:true},StalkGardenBiomes,StalkGardenCount,
+__config__.access("generation.numbers.gardens.stalk"));
+
+
+
+
+// file: WORLD/GENERATION/GARDENS/gourdGarden.js
+
+var GourdGardenCount = {
+	min: __config__.access("generation.group.gardens.gourd.min"),
+	max: __config__.access("generation.group.gardens.gourd.max")
+};
+Harvest.addBlockGeneration({id:BlockID.gourdgarden, data:0, enabled:true},GourdGardenBiomes,GourdGardenCount,
+__config__.access("generation.numbers.gardens.gourd"));
+
+
+
+
+// file: WORLD/GENERATION/salt.js
+
+Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
+	var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
+	coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
+	if(Math.random()< __config__.access("generation.numbers.other.salt")){
+		 for(var idd in SaltBiomes ){
+			var id = SaltBiomes[idd];
+			if((World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)==id)){
+				World.setBlock(coords.x, coords.y + 1, coords.z, BlockID.salt, 0);
+				if (Math.random() < .5){ // top
+					World.setBlock(coords.x, coords.y + 2, coords.z, BlockID.salt, 0);
+				}		
+				if (Math.random() < .5){ // left
+					World.setBlock(coords.x + 1, coords.y + 1, coords.z, BlockID.salt, 0);
+				}		
+				if (Math.random() < .5){ // right
+					World.setBlock(coords.x - 1, coords.y + 1, coords.z, BlockID.salt, 0);
+				}		
+				if (Math.random() < .5){ // front
+					World.setBlock(coords.x, coords.y + 1, coords.z + 1, BlockID.salt, 0);
+				}		
+				if (Math.random() < .5){ // back
+					World.setBlock(coords.x, coords.y + 1, coords.z - 1, BlockID.salt, 0);
+				}
+			}
+		}
+	}
+});
+Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
+	var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
+	if(Math.random()< __config__.access("generation.numbers.other.salt") ){
+		if(World.getBlockID(coords.x,coords.y,coords.z)!=0){
+			World.setBlock(coords.x, coords.y , coords.z, BlockID.salt, 0);
+		}
+	}
+});
+
+
+
+
+// file: WORLD/GENERATION/TREES/biomes.js
+
+var middleBiomes = [1,4,3,132,129,34, 18, 27, 28,13];
+var savannaBiomes = [1,2,4, 18, 27, 28,13];
+var taigaBiomes = [35,163,39,36,164, 167];
+
+
+
+
+// file: WORLD/GENERATION/TREES/trees.js
+
+//apple
+var appleTreesCount = {
+	min:__config__.access("generation.group.trees.apple.min"),
+	max:__config__.access("generation.group.trees.apple.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("apple",middleBiomes,appleTreesCount,__config__.access("generation.numbers.trees.apple"));
+
+//apricot
+var apricotTreesCount = {
+	min:__config__.access("generation.group.trees.apricot.min"),
+	max:__config__.access("generation.group.trees.apricot.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("apricot",savannaBiomes,apricotTreesCount,__config__.access("generation.numbers.trees.apricot"));
+
+//cherry
+var cherryTreesCount = {
+	min:__config__.access("generation.group.trees.cherry.min"),
+	max:__config__.access("generation.group.trees.cherry.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("cherry",middleBiomes,cherryTreesCount,__config__.access("generation.numbers.trees.cherry"));
+
+//avocado
+var avocadoTreesCount = {
+	min:__config__.access("generation.group.trees.avocado.min"),
+	max:__config__.access("generation.group.trees.avocado.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("avocado",middleBiomes,avocadoTreesCount,__config__.access("generation.numbers.trees.avocado"));
+
+//banana
+var bananaTreesCount = {
+	min:__config__.access("generation.group.trees.banana.min"),
+	max:__config__.access("generation.group.trees.banana.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("banana",savannaBiomes,bananaTreesCount,__config__.access("generation.numbers.trees.banana"));
+
+//date
+var dateTreesCount = {
+	min:__config__.access("generation.group.trees.date.min"),
+	max:__config__.access("generation.group.trees.date.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("date",savannaBiomes,dateTreesCount,__config__.access("generation.numbers.trees.date"));
+
+//dragonfruit
+var dragonfruitTreesCount = {
+	min:__config__.access("generation.group.trees.dragonfruit.min"),
+	max:__config__.access("generation.group.trees.dragonfruit.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("dragonfruit",savannaBiomes,dragonfruitTreesCount,__config__.access("generation.numbers.trees.dragonfruit"));
+
+//fig
+var figTreesCount = {
+	min:__config__.access("generation.group.trees.fig.min"),
+	max:__config__.access("generation.group.trees.fig.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("fig",savannaBiomes,figTreesCount,__config__.access("generation.numbers.trees.fig"));
+
+//grapefruit
+var grapefruitTreesCount = {
+	min:__config__.access("generation.group.trees.grapefruit.min"),
+	max:__config__.access("generation.group.trees.grapefruit.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("grapefruit",savannaBiomes,grapefruitTreesCount,__config__.access("generation.numbers.trees.grapefruit"));
+
+//gooseberry
+var gooseberryTreesCount = {
+	min:__config__.access("generation.group.trees.gooseberry.min"),
+	max:__config__.access("generation.group.trees.gooseberry.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("gooseberry",savannaBiomes,gooseberryTreesCount,__config__.access("generation.numbers.trees.gooseberry"));
+
+//lemon
+var lemonTreesCount = {
+	min:__config__.access("generation.group.trees.lemon.min"),
+	max:__config__.access("generation.group.trees.lemon.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("lemon",savannaBiomes,lemonTreesCount,__config__.access("generation.numbers.trees.lemon"));
+
+//lime
+var limeTreesCount = {
+	min:__config__.access("generation.group.trees.lime.min"),
+	max:__config__.access("generation.group.trees.lime.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("lime",savannaBiomes,limeTreesCount,__config__.access("generation.numbers.trees.lime"));
+
+//mango
+var mangoTreesCount = {
+	min:__config__.access("generation.group.trees.mango.min"),
+	max:__config__.access("generation.group.trees.mango.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("mango",savannaBiomes,mangoTreesCount,__config__.access("generation.numbers.trees.mango"));
+
+//olive
+var oliveTreesCount = {
+	min:__config__.access("generation.group.trees.olive.min"),
+	max:__config__.access("generation.group.trees.olive.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("olive",savannaBiomes,oliveTreesCount,__config__.access("generation.numbers.trees.olive"));
+
+//orange
+var orangeTreesCount = {
+	min:__config__.access("generation.group.trees.orange.min"),
+	max:__config__.access("generation.group.trees.orange.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("orange",savannaBiomes,orangeTreesCount,__config__.access("generation.numbers.trees.orange"));
+
+//papaya
+var papayaTreesCount = {
+	min:__config__.access("generation.group.trees.papaya.min"),
+	max:__config__.access("generation.group.trees.papaya.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("papaya",savannaBiomes,papayaTreesCount,__config__.access("generation.numbers.trees.papaya"));
+
+//peach
+var peachTreesCount = {
+	min:__config__.access("generation.group.trees.peach.min"),
+	max:__config__.access("generation.group.trees.peach.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("peach",savannaBiomes,peachTreesCount,__config__.access("generation.numbers.trees.peach"));
+
+//pear
+var pearTreesCount = {
+	min:__config__.access("generation.group.trees.pear.min"),
+	max:__config__.access("generation.group.trees.pear.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("pear",taigaBiomes,pearTreesCount,__config__.access("generation.numbers.trees.pear"));
+
+//persimmon
+var persimmonTreesCount = {
+	min:__config__.access("generation.group.trees.persimmon.min"),
+	max:__config__.access("generation.group.trees.persimmon.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("persimmon",savannaBiomes,persimmonTreesCount,__config__.access("generation.numbers.trees.persimmon"));
+
+//plum
+var plumTreesCount = {
+	min:__config__.access("generation.group.trees.plum.min"),
+	max:__config__.access("generation.group.trees.plum.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("plum",savannaBiomes,plumTreesCount,__config__.access("generation.numbers.trees.plum"));
+
+//pomegranate
+var pomegranateTreesCount = {
+	min:__config__.access("generation.group.trees.pomegranate.min"),
+	max:__config__.access("generation.group.trees.pomegranate.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("pomegranate",savannaBiomes,pomegranateTreesCount,__config__.access("generation.numbers.trees.pomegranate"));
+
+//starfruit
+var starfruitTreesCount = {
+	min:__config__.access("generation.group.trees.starfruit.min"),
+	max:__config__.access("generation.group.trees.starfruit.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("starfruit",savannaBiomes,starfruitTreesCount,__config__.access("generation.numbers.trees.starfruit"));
+
+//almond
+var almondTreesCount = {
+	min:__config__.access("generation.group.trees.almond.min"),
+	max:__config__.access("generation.group.trees.almond.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("almond",savannaBiomes,almondTreesCount,__config__.access("generation.numbers.trees.almond"));
+
+//peppercorn
+var peppercornTreesCount = {
+	min:__config__.access("generation.group.trees.peppercorn.min"),
+	max:__config__.access("generation.group.trees.peppercorn.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("peppercorn",savannaBiomes,peppercornTreesCount,__config__.access("generation.numbers.trees.peppercorn"));
+
+//cashew
+var cashewTreesCount = {
+	min:__config__.access("generation.group.trees.cashew.min"),
+	max:__config__.access("generation.group.trees.cashew.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("cashew",savannaBiomes,cashewTreesCount,__config__.access("generation.numbers.trees.cashew"));
+
+//coconut
+var coconutTreesCount = {
+	min:__config__.access("generation.group.trees.coconut.min"),
+	max:__config__.access("generation.group.trees.coconut.max"),
+	enabled:true
+};
+TreeRegistry.addTreeGeneration("coconut",savannaBiomes,coconutTreesCount,__config__.access("generation.numbers.trees.coconut"));
+
+
+
+
+// file: CROPS/crops.js
+
+// file: CROPS/strawberry.js
+
+CropRegistry.registerWithID("strawberrycrop","strawberrycrop","strawberrycrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.strawberrycrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.strawberrycrop,
+    drop:ItemID.strawberry,
+    seed:ItemID.strawberry_seed
+});
+
+
+
+
+// file: CROPS/raspberry.js
+
+CropRegistry.registerWithID("raspberrycrop","raspberrycrop","raspberry_crop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.raspberrycrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.raspberrycrop,
+    drop:ItemID.raspberry,
+    seed:ItemID.raspberry_seed
+});
+
+
+
+
+// file: CROPS/cranberry.js
+
+CropRegistry.registerWithID("cranberrycrop","cranberrycrop","cranberrycrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.cranberrycrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.cranberrycrop,
+    drop:ItemID.cranberry,
+    seed:ItemID.cranberry_seed
+});
+
+
+
+
+// file: CROPS/blueberry.js
+
+CropRegistry.registerWithID("blueberrycrop","blueberrycrop","blueberrycrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.blueberrycrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.blueberrycrop,
+    drop:ItemID.blueberry,
+    seed:ItemID.blueberry_seed
+});
+
+
+
+
+// file: CROPS/blackberry.js
+
+CropRegistry.registerWithID("blackberrycrop","blackberrycrop","blackberrycrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.blackberrycrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.blackberrycrop,
+    drop:ItemID.blackberry,
+    seed:ItemID.blackberry_seed
+});
+
+
+
+
+// file: CROPS/grape.js
+
+CropRegistry.registerWithID("grapecrop","grapecrop","grapecrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.grapecrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.grapecrop,
+    drop:ItemID.grape,
+    seed:ItemID.grape_seed
+});
+
+
+
+
+// file: CROPS/cucumber.js
+
+CropRegistry.registerWithID("cucumbercrop","cucumbercrop","cucumbercrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.cucumbercrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.cucumbercrop,
+    drop:ItemID.cucumber,
+    seed:ItemID.cucumber_seed
+});
+
+
+
+
+// file: CROPS/onion.js
+
+CropRegistry.registerWithID("onioncrop","onioncrop","onioncrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.onioncrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.onioncrop,
+    drop:ItemID.onion,
+    seed:ItemID.onion_seed
+});
+
+
+
+
+// file: CROPS/cabbage.js
+
+CropRegistry.registerWithID("cabbagecrop","cabbagecrop","cabbagecrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.cabbagecrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.cabbagecrop,
+    drop:ItemID.cabbage,
+    seed:ItemID.cabbage_seed
+});
+
+
+
+
+// file: CROPS/tomato.js
+
+CropRegistry.registerWithID("tomatocrop","tomatocrop","tomatocrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.tomatocrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.tomatocrop,
+    drop:ItemID.tomato,
+    seed:ItemID.tomato_seed
+});
+
+
+
+
+// file: CROPS/garlic.js
+
+CropRegistry.registerWithID("garliccrop","garliccrop","garliccrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.garliccrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.garliccrop,
+    drop:ItemID.garlic,
+    seed:ItemID.garlic_seed
+});
+
+
+
+
+// file: CROPS/bellpepper.js
+
+CropRegistry.registerWithID("bellpeppercrop","bellpeppercrop","bellpeppercrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.bellpeppercrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.bellpeppercrop,
+    drop:ItemID.bellpepper,
+    seed:ItemID.bellpepper_seed
+});
+
+
+
+
+// file: CROPS/lettuce.js
+
+CropRegistry.registerWithID("lettucecrop","lettucecrop","lettucecrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.lettucecrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.lettucecrop,
+    drop:ItemID.lettuce,
+    seed:ItemID.lettuce_seed
+});
+
+
+
+
+// file: CROPS/coffeebean.js
+
+CropRegistry.registerWithID("coffeebeancrop","coffeebeancrop","coffeebeancrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.coffeebeancrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.coffeebeancrop,
+    drop:ItemID.coffee_beans,
+    seed:ItemID.coffee_seed
+});
+
+
+
+
+// file: CROPS/peas.js
+
+CropRegistry.registerWithID("peascrop","peascrop","peascrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.peascrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.peascrop,
+    drop:ItemID.peas,
+    seed:ItemID.peas_seed
+});
+
+
+
+
+// file: CROPS/chilipepper.js
+
+CropRegistry.registerWithID("chilipeppercrop","chilipeppercrop","chilipeppercrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.chilipeppercrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.chilipeppercrop,
+    drop:ItemID.chili_pepper,
+    seed:ItemID.chili_pepper_seed
+});
+
+
+
+
+// file: CROPS/spiceleaf.js
+
+CropRegistry.registerWithID("spiceleafcrop","spiceleafcrop","spiceleafcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.spiceleafcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.spiceleafcrop,
+    drop:ItemID.spice_leaf,
+    seed:ItemID.spice_leaf_seed
+});
+
+
+
+
+// file: CROPS/corn.js
+
+CropRegistry.registerWithID("corncrop","corncrop","corncrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.corncrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.corncrop,
+    drop:ItemID.corn,
+    seed:ItemID.corn_seed
+});
+
+
+
+
+// file: CROPS/candleberry.js
+
+CropRegistry.registerWithID("candleberrycrop","candleberrycrop","candleberrycrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.candleberrycrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.candleberrycrop,
+    drop:ItemID.candleberry,
+    seed:ItemID.candleberryseed
+});
+
+
+
+
+// file: CROPS/curryleaf.js
+
+CropRegistry.registerWithID("curryleaf","curryleaf","curryleafcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.curryleaf);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.curryleaf,
+    drop:ItemID.curryleaf,
+    seed:ItemID.curryleaf_seed
+});
+
+
+
+
+// file: CROPS/cotton.js
+
+CropRegistry.registerWithID("cottoncrop","cottoncrop","cottoncrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.cottoncrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.cottoncrop,
+    drop:ItemID.cotton,
+    seed:ItemID.cotton_seed
+});
+
+
+
+
+// file: CROPS/rutabaga.js
+
+CropRegistry.registerWithID("rutabagacrop","rutabagacrop","rutabagacrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.rutabagacrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.rutabagacrop,
+    drop:ItemID.rutabaga,
+    seed:ItemID.rutabaga_seed
+});
+
+
+
+
+// file: CROPS/bean.js
+
+CropRegistry.registerWithID("beancrop","beancrop","beancrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.beancrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.beancrop,
+    drop:ItemID.bean,
+    seed:ItemID.bean_seed
+});
+
+
+
+
+// file: CROPS/waterchestnut.js
+
+CropRegistry.registerWithID("waterchestnutcrop","waterchestnutcrop","waterchestnutcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.waterchestnutcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.waterchestnutcrop,
+    drop:ItemID.waterchestnut,
+    seed:ItemID.waterchestnut_seed
+});
+
+
+
+
+// file: CROPS/rice.js
+
+CropRegistry.registerWithID("ricecrop","ricecrop","ricecrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.ricecrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.ricecrop,
+    drop:ItemID.rice,
+    seed:ItemID.rice_seed
+});
+
+
+
+
+// file: CROPS/mustardseeds.js
+
+CropRegistry.registerWithID("mustardseedscrop","mustardseedscrop","mustardseedscrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.mustardseedscrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.mustardseedscrop,
+    drop:ItemID.mustardseeds,
+    seed:ItemID.mustard_seed
+});
+
+
+
+
+// file: CROPS/ginger.js
+
+CropRegistry.registerWithID("gingercrop","gingercrop","gingercrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.gingercrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.gingercrop,
+    drop:ItemID.ginger,
+    seed:ItemID.ginger_seed
+});
+
+
+
+
+// file: CROPS/spinach.js
+
+CropRegistry.registerWithID("spinachcrop","spinachcrop","spinachcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.spinachcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.spinachcrop,
+    drop:ItemID.spinach,
+    seed:ItemID.spinach_seed
+});
+
+
+
+// file: CROPS/cactusfruit.js
+
+CropRegistry.registerWithID("cactusfruitcrop","cactusfruitcrop","cactusfruitcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.cactusfruitcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.cactusfruitcrop,
+    drop:ItemID.cactusfruit,
+    seed:ItemID.cactusfruit_seed
+});
+
+
+
+// file: CROPS/cantaloupe.js
+
+CropRegistry.registerWithID("cantaloupecrop","cantaloupecrop","cantaloupecrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.cantaloupecrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.cantaloupecrop,
+    drop:ItemID.cantaloupe,
+    seed:ItemID.cantaloupe_seed
+});
+
+
+
+// file: CROPS/kiwi.js
+
+CropRegistry.registerWithID("kiwicrop","kiwicrop","kiwicrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.kiwicrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.kiwicrop,
+    drop:ItemID.kiwi,
+    seed:ItemID.kiwi_seed
+});
+
+
+
+// file: CROPS/pineapple.js
+
+CropRegistry.registerWithID("pineapplecrop","pineapplecrop","pineapplecrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.pineapplecrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.pineapplecrop,
+    drop:ItemID.pineapple,
+    seed:ItemID.pineapple_seed
+});
+
+
+//////////////////////////////////////////////////////////////////////////
+// file: CROPS/artichoke.js
+
+CropRegistry.registerWithID("artichokecrop","artichokecrop","artichokecrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.artichokecrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.artichokecrop,
+    drop:ItemID.artichoke,
+    seed:ItemID.artichoke_seed
+});
+
+
+
+// file: CROPS/asparagus.js
+
+CropRegistry.registerWithID("asparaguscrop","asparaguscrop","asparaguscrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.asparaguscrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.asparaguscrop,
+    drop:ItemID.asparagus,
+    seed:ItemID.asparagus_seed
+});
+
+
+
+// file: CROPS/bambooshoot.js
+
+CropRegistry.registerWithID("bambooshootcrop","bambooshootcrop","bambooshootcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.bambooshootcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.bambooshootcrop,
+    drop:ItemID.bambooshoot,
+    seed:ItemID.bambooshoot_seed
+});
+
+
+
+// file: CROPS/broccoli.js
+
+CropRegistry.registerWithID("broccolicrop","broccolicrop","broccolicrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.broccolicrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.broccolicrop,
+    drop:ItemID.broccoli,
+    seed:ItemID.broccoli_seed
+});
+
+
+
+// file: CROPS/brusselsprout.js
+
+CropRegistry.registerWithID("brusselsproutcrop","brusselsproutcrop","brusselsproutcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.brusselsproutcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.brusselsproutcrop,
+    drop:ItemID.brusselsprout,
+    seed:ItemID.brusselsprout_seed
+});
+
+
+
+// file: CROPS/cauliflower.js
+
+CropRegistry.registerWithID("cauliflowercrop","cauliflowercrop","cauliflowercrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.cauliflowercrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.cauliflowercrop,
+    drop:ItemID.cauliflower,
+    seed:ItemID.cauliflower_seed
+});
+
+
+
+
+// file: CROPS/celery.js
+
+CropRegistry.registerWithID("celerycrop","celerycrop","celerycrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.celerycrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.celerycrop,
+    drop:ItemID.celery,
+    seed:ItemID.celery_seed
+});
+
+
+
+
+// file: CROPS/radish.js
+
+CropRegistry.registerWithID("radishcrop","radishcrop","radishcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.radishcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.radishcrop,
+    drop:ItemID.radish,
+    seed:ItemID.radish_seed
+});
+
+
+
+
+// file: CROPS/eggplant.js
+
+CropRegistry.registerWithID("eggplantcrop","eggplantcrop","eggplantcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.eggplantcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.eggplantcrop,
+    drop:ItemID.eggplant,
+    seed:ItemID.eggplant_seed
+});
+
+
+
+// file: CROPS/leek.js
+
+CropRegistry.registerWithID("leekcrop","leekcrop","leekcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.leekcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.leekcrop,
+    drop:ItemID.leek,
+    seed:ItemID.leek_seed
+});
+
+
+
+// file: CROPS/okra.js
+
+CropRegistry.registerWithID("okracrop","okracrop","okracrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.okracrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.okracrop,
+    drop:ItemID.okra,
+    seed:ItemID.okra_seed
+});
+
+
+
+// file: CROPS/parsnip.js
+
+CropRegistry.registerWithID("parsnipcrop","parsnipcrop","parsnipcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.parsnipcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.parsnipcrop,
+    drop:ItemID.parsnip,
+    seed:ItemID.parsnip_seed
+});
+
+
+
+
+// file: CROPS/rhubarb.js
+
+CropRegistry.registerWithID("rhubarbcrop","rhubarbcrop","rhubarbcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.rhubarbcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.rhubarbcrop,
+    drop:ItemID.rhubarb,
+    seed:ItemID.rhubarb_seed
+});
+
+
+
+// file: CROPS/scallion.js
+
+CropRegistry.registerWithID("scallioncrop","scallioncrop","scallioncrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.scallioncrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.scallioncrop,
+    drop:ItemID.scallion,
+    seed:ItemID.scallion_seed
+});
+
+
+
+// file: CROPS/soybean.js
+
+CropRegistry.registerWithID("soybeancrop","soybeancrop","soybeancrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.soybeancrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.soybeancrop,
+    drop:ItemID.soybean,
+    seed:ItemID.soybean_seed
+});
+
+
+
+// file: CROPS/sweetpotato.js
+
+CropRegistry.registerWithID("sweetpotatocrop","sweetpotatocrop","sweetpotatocrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.sweetpotatocrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.sweetpotatocrop,
+    drop:ItemID.sweetpotato,
+    seed:ItemID.sweetpotato_seed
+});
+
+
+
+// file: CROPS/turnip.js
+
+CropRegistry.registerWithID("turnipcrop","turnipcrop","turnipcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.turnipcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.turnipcrop,
+    drop:ItemID.turnip,
+    seed:ItemID.turnip_seed
+});
+
+
+
+
+// file: CROPS/peanut.js
+
+CropRegistry.registerWithID("peanutcrop","peanutcrop","peanutcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.peanutcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.peanutcrop,
+    drop:ItemID.peanut,
+    seed:ItemID.peanut_seed
+});
+
+
+
+// file: CROPS/rye.js
+
+CropRegistry.registerWithID("ryecrop","ryecrop","ryecrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.ryecrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.ryecrop,
+    drop:ItemID.rye,
+    seed:ItemID.rye_seed
+});
+
+
+
+
+// file: CROPS/zucchini.js
+
+CropRegistry.registerWithID("zucchinicrop","zucchinicrop","zucchinicrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.zucchinicrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.zucchinicrop,
+    drop:ItemID.zucchini,
+    seed:ItemID.zucchini_seed
+});
+
+
+
+
+// file: CROPS/barley.js
+
+CropRegistry.registerWithID("barleycrop","barleycrop","barleycrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.barleycrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.barleycrop,
+    drop:ItemID.barley,
+    seed:ItemID.barley_seed
+});
+
+
+
+
+// file: CROPS/oats.js
+
+CropRegistry.registerWithID("oatscrop","oatscrop","oatscrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.oatscrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.oatscrop,
+    drop:ItemID.oats,
+    seed:ItemID.oats_seed
+});
+
+
+
+
+// file: CROPS/wintersquash.js
+
+CropRegistry.registerWithID("wintersquashcrop","wintersquashcrop","wintersquashcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.wintersquashcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.wintersquashcrop,
+    drop:ItemID.wintersquash,
+    seed:ItemID.wintersquash_seed
+});
+
+
+
+
+// file: CROPS/tealeaf.js
+
+CropRegistry.registerWithID("tealeafcrop","tealeafcrop","tealeafcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.tealeafcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.tealeafcrop,
+    drop:ItemID.tealeaf,
+    seed:ItemID.tealeaf_seed
+});
+
+
+
+// file: CROPS/beet.js
+
+CropRegistry.registerWithID("beetcrop","beetcrop","beetcrop",BLOCK_TYPE_CROP);
+PlantModel.crop(BlockID.beetcrop);
+CropRegistry.deriveCropAsClass("harvestcraft_crop",{
+    id:BlockID.beetcrop,
+    drop:ItemID.beet,
+    seed:ItemID.beet_seed
+});
+
+
+
+

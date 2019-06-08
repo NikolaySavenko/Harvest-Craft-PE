@@ -1,39 +1,39 @@
 //Harvest Core by Nikolay Savenko
-//API level: 2.4
+//API level: 2.4.5
 LIBRARY({
-	name:"Harvest_Core",
-	version:7,
-	shared:true,
-	api:"CoreEngine"
+    name:"Harvest_Core",
+    version:8,
+    shared:true,
+    api:"CoreEngine"
 });
 var Flags = {
-	allFlags: {},
-	
-	addFlag: function(name) {
-		if (this.allFlags[name]) {
-			return true;
-		}
-		else {
-			this.allFlags[name] = true;
-			return false;
-		}
-	},
-	
-	getFlag: function(name) {
-		return this.allFlags[name] ? true : false;
-	},
-	
-	addUniqueAction: function(name, action) {
-		if (!this.addFlag(name)) {
-			action();
-		}
-	},
-	
-	assertFlag: function(name) {
-		if (!this.getFlag(name)) {
-			Logger.Log("Assertion failed: flag '" + name + "' does not exist", "ERROR");
-		}
-	}
+    allFlags: {},
+    
+    addFlag: function(name) {
+        if (this.allFlags[name]) {
+            return true;
+        }
+        else {
+            this.allFlags[name] = true;
+            return false;
+        }
+    },
+    
+    getFlag: function(name) {
+        return this.allFlags[name] ? true : false;
+    },
+    
+    addUniqueAction: function(name, action) {
+        if (!this.addFlag(name)) {
+            action();
+        }
+    },
+    
+    assertFlag: function(name) {
+        if (!this.getFlag(name)) {
+            Logger.Log("Assertion failed: flag '" + name + "' does not exist", "ERROR");
+        }
+    }
 };
 
 var BLOCK_TYPE_CROP = Block.createSpecialType({
@@ -67,8 +67,17 @@ var Harvest = {
     dropWithoutDirt:{},
     dropWithoutLeaves:{},
     grassDropsArray:[],
+    getStringID:function(intID,isItem){
+        var findFrom = isItem ? ItemID : BlockID;
+        for(var id in findFrom){
+            if(intID==findFrom[id]){
+                alert(id+" "+findFrom[id]+" "+intID);
+                return id;
+            }
+        }return null;
+    },
     addGrassDrop:function(item){
-		Harvest.grassDropsArray.push(item);
+        Harvest.grassDropsArray.push(item);
     },
     registerTool:function(tool){
         Harvest.toolList[tool] = true;
@@ -94,19 +103,19 @@ var Harvest = {
     setFood:function(id,name,food){
         IDRegistry.genItemID(id);
         Item.createFoodItem(id,name, {name: id, meta: 0}, {food: food});
-		//Logger.Log("food:  "+id,"HCORE");
+        //Logger.Log("food:  "+id,"HCORE");
     },
-	debugRecipe:function(id,ingredients){
-		if(!id.id){
-			alert("invalid recipe id: "+id.id);
-		}
-		for(var i in ingredients){
-			if(!ingredients[i].id){
-				alert("invalid ing: "+ingredients[i].id+"   in recipe of: "+id.id);
-			}
-		}
-	},
-    recipe:function(id,ingredients){		
+    debugRecipe:function(id,ingredients){
+        if(!id.id){
+            alert("invalid recipe id: "+id.id);
+        }
+        for(var i in ingredients){
+            if(!ingredients[i].id){
+                alert("invalid ing: "+ingredients[i].id+"   in recipe of: "+id.id);
+            }
+        }
+    },
+    recipe:function(id,ingredients){        
         if(ingredients){
             if(!id.count){
                 id.count = 1;
@@ -114,48 +123,48 @@ var Harvest = {
             if(!id.data){
                 id.data = 0;
             }
-			//Harvest.debugRecipe(id,ingredients);
-			Callback.addCallback("LevelLoaded", function(){
-				Recipes.addShapeless({id: id.id, count: id.count, data: id.data}, ingredients, function(api, field, result){
-					for (var i in field){
-						if (!Harvest.toolList[field[i].id]){
-							api.decreaseFieldSlot(i);
-						}
-					}
-				});
-			});
+            //Harvest.debugRecipe(id,ingredients);
+            Callback.addCallback("LevelLoaded", function(){
+                Recipes.addShapeless({id: id.id, count: id.count, data: id.data}, ingredients, function(api, field, result){
+                    for (var i in field){
+                        if (!Harvest.toolList[field[i].id]){
+                            api.decreaseFieldSlot(i);
+                        }
+                    }
+                });
+            });
         }
     },
-	recipeVariations:function(id,tool,ingredients){
-		var rrecipes = [];
-		if(!id.count){
-			id.count = 1;
-		}
-		if(!id.data){
-			id.data = 0;
-		}
+    recipeVariations:function(id,tool,ingredients){
+        var rrecipes = [];
+        if(!id.count){
+            id.count = 1;
+        }
+        if(!id.data){
+            id.data = 0;
+        }
         for(var i in ingredients){
             for(var d in ingredients){
-				if(ingredients[i]!=ingredients[d]){
-					rrecipes.push([{id:ingredients[i],data:0},{id:ingredients[d],data:0},{id: tool, data: 0}]);
-				}
+                if(ingredients[i]!=ingredients[d]){
+                    rrecipes.push([{id:ingredients[i],data:0},{id:ingredients[d],data:0},{id: tool, data: 0}]);
+                }
             }
         }
         Callback.addCallback("LevelLoaded", function(){
-			for(var rec in rrecipes){
-				Recipes.addShapeless({id: id.id, count: id.count, data: id.data}, rrecipes[rec],function(api, field, result){
-					for (var i in field){
-						if (!Harvest.toolList[field[i].id]){
-							api.decreaseFieldSlot(i);
-						}
-					}
-				});
-			}
-		});
+            for(var rec in rrecipes){
+                Recipes.addShapeless({id: id.id, count: id.count, data: id.data}, rrecipes[rec],function(api, field, result){
+                    for (var i in field){
+                        if (!Harvest.toolList[field[i].id]){
+                            api.decreaseFieldSlot(i);
+                        }
+                    }
+                });
+            }
+        });
     },
     recipeDuoVariations:function(id,tool,ingredients){
-		var rrecipes = [];
-		if(!id.count){
+        var rrecipes = [];
+        if(!id.count){
             id.count = 1;
         }
         if(!id.data){
@@ -164,60 +173,60 @@ var Harvest = {
         for(var d in ingredients){
             rrecipes.push([{id:ingredients[d],data:0},{id: tool, data: 0}]);
         } 
-		Callback.addCallback("LevelLoaded", function(){	
-			for(var w in rrecipes){
-				Recipes.addShapeless({id: id.id, count: id.count, data: id.data}, rrecipes[w], function(api, field, result){
-					for (var i in field){
-						if (!Harvest.toolList[field[i].id]){
-							api.decreaseFieldSlot(i);
-						}
-					}
-				});
-			}
-		});
+        Callback.addCallback("LevelLoaded", function(){ 
+            for(var w in rrecipes){
+                Recipes.addShapeless({id: id.id, count: id.count, data: id.data}, rrecipes[w], function(api, field, result){
+                    for (var i in field){
+                        if (!Harvest.toolList[field[i].id]){
+                            api.decreaseFieldSlot(i);
+                        }
+                    }
+                });
+            }
+        });
     },
     addBlockGeneration:function(block,biomes,cccount,chance){
-		block.enabled = !Flags.addFlag(block.id.toString());
+        block.enabled = !Flags.addFlag(block.id.toString());
 
-		Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
-			if(Math.random() <chance&&block.enabled){
+        Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
+            if(Math.random() <chance&&block.enabled){
                 
-				var trueFarmlands = {};
-				var count; 
-				if(typeof(cccount)=="object"){
-					count = Random.Int(cccount.min,cccount.max);
-				}
-				else if(typeof(cccount)=="string"){
-					count=cccount;
-				}
-				for(var ccount = 1;ccount<=count;ccount++){
-					var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
-					coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
-					var farmlands = CropRegistry.getFarmlandsFromCrop(block.id);
-					if(farmlands){
-						for(var i in farmlands){
-							trueFarmlands[farmlands[i].id] = true;
-						}
-					}else{
-						trueFarmlands[World.getBlockID(coords.x, coords.y,coords.z)] = true;
-					}
-					if(biomes==null&&trueFarmlands[World.getBlockID(coords.x, coords.y, coords.z)]){
-						World.setBlock(coords.x, coords.y + 1, coords.z, block.id, block.data);
+                var trueFarmlands = {};
+                var count; 
+                if(typeof(cccount)=="object"){
+                    count = Random.Int(cccount.min,cccount.max);
+                }
+                else if(typeof(cccount)=="string"){
+                    count=cccount;
+                }
+                for(var ccount = 1;ccount<=count;ccount++){
+                    var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
+                    coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
+                    var farmlands = CropRegistry.getFarmlandsFromCrop(block.id);
+                    if(farmlands){
+                        for(var i in farmlands){
+                            trueFarmlands[farmlands[i].id] = true;
+                        }
+                    }else{
+                        trueFarmlands[World.getBlockID(coords.x, coords.y,coords.z)] = true;
+                    }
+                    if(biomes==null&&trueFarmlands[World.getBlockID(coords.x, coords.y, coords.z)]){
+                        World.setBlock(coords.x, coords.y + 1, coords.z, block.id, block.data);
                         World.addTileEntity(coords.x, coords.y + 1, coords.z);  
                         //alert("++ block");
-					}else{
-						for(var idd in biomes ){
-							var id = biomes[idd];
-							if((World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)==id)&&trueFarmlands[World.getBlockID(coords.x, coords.y, coords.z)]){
-								World.setBlock(coords.x, coords.y + 1, coords.z, block.id, block.data);
+                    }else{
+                        for(var idd in biomes ){
+                            var id = biomes[idd];
+                            if((World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)==id)&&trueFarmlands[World.getBlockID(coords.x, coords.y, coords.z)]){
+                                World.setBlock(coords.x, coords.y + 1, coords.z, block.id, block.data);
                                 World.addTileEntity(coords.x, coords.y + 1, coords.z); 
                                 //alert("++ block"); 
-							}
-						}
-					}           
-				}
-			}
-		});
+                            }
+                        }
+                    }           
+                }
+            }
+        });
     },
     registerDrop:function(bl,itm){
         Block.registerDropFunction(bl, function(coords, blockID, blockData, level){
@@ -229,20 +238,20 @@ var Harvest = {
             return[[ itm, 1,0 ]];
         });
     },
-	drop:function(id,count,coords){
-		Entity.setVelocity(
-			World.drop( coords.x ,  coords.y,   coords.z , id, count, 0),
-			Random.Float(-0.2,0.2),
-			Random.Float(-0.2,0.2),
-			Random.Float(-0.2,0.2)
+    drop:function(id,count,coords){
+        Entity.setVelocity(
+            World.drop( coords.x ,  coords.y,   coords.z , id, count, 0),
+            Random.Float(-0.2,0.2),
+            Random.Float(-0.2,0.2),
+            Random.Float(-0.2,0.2)
         );
-	},
+    },
     dropFruit:function(id,x,y,z){
-		Entity.setVelocity(
-			World.drop( x , y,  z , id, Random.Int(1,3), 0),
-			Random.Float(-0.2,0.2),
-			Random.Float(-0.2,0.2),
-			Random.Float(-0.2,0.2)
+        Entity.setVelocity(
+            World.drop( x , y,  z , id, Random.Int(1,3), 0),
+            Random.Float(-0.2,0.2),
+            Random.Float(-0.2,0.2),
+            Random.Float(-0.2,0.2)
         );
     },
     dropPlant:function(id,x,y,z){
@@ -253,42 +262,42 @@ var Harvest = {
             Random.Float(-0.2,0.2)
         );
     },
-	isFarmland:function(block){
-		for(var classs in CropRegistry.cropClasses){
-			var classObj = CropRegistry.cropClasses[classs];
-			if(classObj.config){
-				var farmlands = classObj.config.farmland;
-				if(farmlands){
-					for(var farmlamdIndex in farmlands){
-						var farm = farmlands[farmlamdIndex];
-						if(farm.id==block.id&&farm.data==block.data){
-							return farm;
-						}
-					}
-				}
-			}
-		}
-		return null;
-	}
+    isFarmland:function(block){
+        for(var classs in CropRegistry.cropClasses){
+            var classObj = CropRegistry.cropClasses[classs];
+            if(classObj.config){
+                var farmlands = classObj.config.farmland;
+                if(farmlands){
+                    for(var farmlamdIndex in farmlands){
+                        var farm = farmlands[farmlamdIndex];
+                        if(farm.id==block.id&&farm.data==block.data){
+                            return farm;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
 };
 
 var CropRegistry = {
     cropClasses:{/*
         "harvest_crop":{
             logic:{},
-			functions:{
-				derive:function(class,id){},
-				grow:function(coords,cchance){},
-				collect:function(coords,dropFruit){}
-			},
-			deriveFunction:function(class,id){},
+            functions:{
+                derive:function(class,id){},
+                grow:function(coords,cchance){},
+                collect:function(coords,dropFruit){}
+            },
+            deriveFunction:function(class,id){},
             config:{
                 ageSpeed:0.001,
                 manure:{id:351,data:15},
                 farmland:[{id:60,data:0}],
-				seedsPlaceFunc:true,
-				growStages:3,
-				supportAgricraft:true
+                seedsPlaceFunc:true,
+                growStages:3,
+                supportAgricraft:true
             },
             heirs:{
                 BlockID.candleberry:{
@@ -315,11 +324,11 @@ var CropRegistry = {
     registerClass:function(name){
         this.cropClasses[name] = {
             logic:null,
-			functions:{
-				derive:null,
-				grow:null,
-				collect:null
-			},
+            functions:{
+                derive:null,
+                grow:null,
+                collect:null
+            },
             config:{},
             heirs:{}
         };
@@ -327,36 +336,36 @@ var CropRegistry = {
     deriveCropAsClass:function(classs,crop){
         var cl = this.cropClasses[classs];
         if(cl){
-			var cfg = cl.config
+            var cfg = cl.config
             cl.heirs[crop.id] = {drop:crop.drop,seed:crop.seed};
-			if(cfg.seedsPlaceFunc){
-				Item.registerUseFunctionForID(crop.seed, function(coords, item, block){
+            if(cfg.seedsPlaceFunc){
+                Item.registerUseFunctionForID(crop.seed, function(coords, item, block){
                         for(var i in cfg.farmland){
                             var farmland = cfg.farmland[i];
                             if(block.id == farmland.id&&block.data == farmland.data){
                                 World.setBlock(coords.x,coords.y+1,coords.z,crop.id ,0);
                                 Player.setCarriedItem(crop.seed, item.count - 1, 0);
-								if(cl.logic){
-									World.addTileEntity(coords.x, coords.y+1, coords.z);
-								}
+                                if(cl.logic){
+                                    World.addTileEntity(coords.x, coords.y+1, coords.z);
+                                }
                             }
                         }                   
                 });
-			}
-			if(cl.logic){	
-				TileEntity.registerPrototype(crop.id,cl.logic);
-			}  
-			if(cl.functions.derive){			
-				cl.functions.derive(cl,crop.id);
-			}
+            }
+            if(cl.logic){   
+                TileEntity.registerPrototype(crop.id,cl.logic);
+            }  
+            if(cl.functions.derive){            
+                cl.functions.derive(cl,crop.id);
+            }
         }
     },
-	registerClassDeriveFunction:function(classs,ffunc){
-		var cl = this.cropClasses[classs];
-		if(cl){
-			cl.functions.derive = ffunc;
-		}
-	},
+    registerClassDeriveFunction:function(classs,ffunc){
+        var cl = this.cropClasses[classs];
+        if(cl){
+            cl.functions.derive = ffunc;
+        }
+    },
     registerClassLogic:function(classs,logic){
         if(!logic.manure){
             logic.manure = this.cropClasses[classs].config.manure;
@@ -368,7 +377,7 @@ var CropRegistry = {
         cl.logic = logic;
     },
     registerClassConfig:function(classs,config){
-		if(!config.seedsPlaceFunc){
+        if(!config.seedsPlaceFunc){
             config.seedsPlaceFunc = false;
         }
         if(!config.ageSpeed){
@@ -377,125 +386,125 @@ var CropRegistry = {
         if(!config.standartAge){
             config.standartAge = 0
         }
-		if(!config.growStages){
+        if(!config.growStages){
             config.growStages = 1;
         }
         if(!config.farmland){
             config.farmland = [];
         }
         var cl = this.cropClasses[classs];
-		if(cl){
-			cl.config = config;
-		}
+        if(cl){
+            cl.config = config;
+        }
     },
-	setRegularFunctionsForClass:function(cl,growChance,particles){
-		var clData = this.cropClasses[cl];		
-		var funcs = clData.functions;
-		var cfg = clData.config;
-		if(!funcs.grow){
-			funcs.grow = function(coords,cchance){
-				var block = World.getBlock(coords.x,coords.y,coords.z);
-				var chance = 1;
-				if(cchance){
-					chance = cchance;
-				}
-				if(block.data<cfg.growStages-1){
-					if(Math.random()<chance){
-						World.setBlock(coords.x,coords.y,coords.z,block.id,block.data+1);
-					}
-					if(particles){
-						for(var i = 0;i<particles;i++){
-							Particles.addParticle(Native.ParticleType.happyVillager, coords.x+Math.random()*.8,coords.y+Math.random()*.8,coords.z+Math.random()*.8,0,0,0,0)
-						}
-					}
-					Player.decreaseCarriedItem(1);
-				}
-			}
-		}
-		if(!funcs.collect){
-			funcs.collect = function(coords,dropFruit){
-				var block = World.getBlock(coords.x,coords.y,coords.z);
-				var dropID = CropRegistry.getDropFromCrop(block.id);
-				World.setBlock(coords.x,coords.y,coords.z,block.id,0);
-				if(dropFruit){
-					if(typeof(dropFruit)=="boolean"){
-						Harvest.drop(dropID,Random.Int(1,3),coords);
-					}
-					else if(typeof(dropFruit)=="number"){
-						Harvest.drop(dropID,dropFruit,coords);
-					}
-				}else{
-					return dropID;
-				}
-			}
-		}
-		if(clData.config){
-			var manure  = clData.config.manure;
-			Callback.addCallback("ItemUse", function(coords, item, block){
-				for(var crop in clData.heirs){
-					var chance = 0;
-					if(growChance){
-						chance = growChance;
-					}
-					if(block.id==crop){
-						if(item.id==manure.id&&item.data==manure.data&&block.data<2){
-							funcs.grow(coords,chance);
-						}
-						else if(block.data==2){							
-							funcs.collect(coords,true);
-						}
-					}
-				}
-			});
-		}		
-	},
-	growCropAtCoords:function(coords,cchance){
-		var cl = CropRegistry.getClassOfCrop(World.getBlockID(coords.x,coords.y,coords.z));
-		var clData = this.cropClasses[cl];
-		if(clData){
-			if(clData.functions.grow){
-				//alert("grow");
-				clData.functions.grow(coords,cchance);
-			}//else{alert("XEP")}
-		}
-	},
-	collectCropAtCoords:function(coords,dropFruit){
-		var cl = CropRegistry.getClassOfCrop(World.getBlockID(coords.x,coords.y,coords.z));
-		var clData = this.cropClasses[cl];
-		if(clData){
-			if(clData.functions.collect){
-				clData.functions.collect(coords,dropFruit);
-			}
-		}
-	},
-	setGrowFunctionForClass:function(classs,func){
-		var clData =  this.cropClasses[classs];
-		
-		clData.functions.grow = func;
-	},
-	setCollectFunctionForClass:function(classs,func){
-		var clData =  this.cropClasses[classs];	
-		clData.functions.collect = func;
-	},
-	getClassOfCrop:function(crop){
-		for(var i in this.cropClasses){
+    setRegularFunctionsForClass:function(cl,growChance,particles){
+        var clData = this.cropClasses[cl];      
+        var funcs = clData.functions;
+        var cfg = clData.config;
+        if(!funcs.grow){
+            funcs.grow = function(coords,cchance){
+                var block = World.getBlock(coords.x,coords.y,coords.z);
+                var chance = 1;
+                if(cchance){
+                    chance = cchance;
+                }
+                if(block.data<cfg.growStages-1){
+                    if(Math.random()<chance){
+                        World.setBlock(coords.x,coords.y,coords.z,block.id,block.data+1);
+                    }
+                    if(particles){
+                        for(var i = 0;i<particles;i++){
+                            Particles.addParticle(Native.ParticleType.happyVillager, coords.x+Math.random()*.8,coords.y+Math.random()*.8,coords.z+Math.random()*.8,0,0,0,0)
+                        }
+                    }
+                    Player.decreaseCarriedItem(1);
+                }
+            }
+        }
+        if(!funcs.collect){
+            funcs.collect = function(coords,dropFruit){
+                var block = World.getBlock(coords.x,coords.y,coords.z);
+                var dropID = CropRegistry.getDropFromCrop(block.id);
+                World.setBlock(coords.x,coords.y,coords.z,block.id,0);
+                if(dropFruit){
+                    if(typeof(dropFruit)=="boolean"){
+                        Harvest.drop(dropID,Random.Int(1,3),coords);
+                    }
+                    else if(typeof(dropFruit)=="number"){
+                        Harvest.drop(dropID,dropFruit,coords);
+                    }
+                }else{
+                    return dropID;
+                }
+            }
+        }
+        if(clData.config){
+            var manure  = clData.config.manure;
+            Callback.addCallback("ItemUse", function(coords, item, block){
+                for(var crop in clData.heirs){
+                    var chance = 0;
+                    if(growChance){
+                        chance = growChance;
+                    }
+                    if(block.id==crop){
+                        if(item.id==manure.id&&item.data==manure.data&&block.data<2){
+                            funcs.grow(coords,chance);
+                        }
+                        else if(block.data==2){                         
+                            funcs.collect(coords,true);
+                        }
+                    }
+                }
+            });
+        }       
+    },
+    growCropAtCoords:function(coords,cchance){
+        var cl = CropRegistry.getClassOfCrop(World.getBlockID(coords.x,coords.y,coords.z));
+        var clData = this.cropClasses[cl];
+        if(clData){
+            if(clData.functions.grow){
+                //alert("grow");
+                clData.functions.grow(coords,cchance);
+            }//else{alert("XEP")}
+        }
+    },
+    collectCropAtCoords:function(coords,dropFruit){
+        var cl = CropRegistry.getClassOfCrop(World.getBlockID(coords.x,coords.y,coords.z));
+        var clData = this.cropClasses[cl];
+        if(clData){
+            if(clData.functions.collect){
+                clData.functions.collect(coords,dropFruit);
+            }
+        }
+    },
+    setGrowFunctionForClass:function(classs,func){
+        var clData =  this.cropClasses[classs];
+        
+        clData.functions.grow = func;
+    },
+    setCollectFunctionForClass:function(classs,func){
+        var clData =  this.cropClasses[classs]; 
+        clData.functions.collect = func;
+    },
+    getClassOfCrop:function(crop){
+        for(var i in this.cropClasses){
             if(this.cropClasses[i]){
                 for(var s in this.cropClasses[i].heirs){
                     if(s==crop){
-						return i
+                        return i
                     }
                 }
             }
         }
-	},
+    },
     getConfigFromCrop:function(crop){
         for(var i in this.cropClasses){
             if(this.cropClasses[i]){
                 for(var s in this.cropClasses[i].heirs){
                     if(s==crop){
-						if(this.cropClasses[i].config){
-							return this.cropClasses[i].config;							
-						}				
+                        if(this.cropClasses[i].config){
+                            return this.cropClasses[i].config;                          
+                        }               
                     }
                 }
             }
@@ -543,29 +552,29 @@ var CropRegistry = {
             }
         }
     },
-	getFarmlandsFromCrop:function(crop){
-		var cfg = this.getConfigFromCrop(crop);
-		if(cfg){
-			return cfg.farmland;
-		}else{
-			return null;
-		}
-	},
-	getGrowStagesForCrop:function(crop){
-		for(var i in this.cropClasses){
+    getFarmlandsFromCrop:function(crop){
+        var cfg = this.getConfigFromCrop(crop);
+        if(cfg){
+            return cfg.farmland;
+        }else{
+            return null;
+        }
+    },
+    getGrowStagesForCrop:function(crop){
+        for(var i in this.cropClasses){
             if(this.cropClasses[i]){
                 for(var s in this.cropClasses[i].heirs){
                     if(s==crop){
-						if(this.cropClasses[i].config){
-							if(this.cropClasses[i].config.growStages){
-								return this.cropClasses[i].config.growStages;		
-							}												
-						}				
+                        if(this.cropClasses[i].config){
+                            if(this.cropClasses[i].config.growStages){
+                                return this.cropClasses[i].config.growStages;       
+                            }                                               
+                        }               
                     }
                 }
             }
         }
-	},
+    },
     isCrop:function(crop){
         for(var i in this.cropClasses){
             var id = this.cropClasses[i];
@@ -698,11 +707,11 @@ function TreePrototype(){
                     if(activate){
                         World.addTileEntity(coords.x+element.x,coords.y+element.y,coords.z+element.z)
                     }
-					o++; 
+                    o++; 
                 }
                 else{
                     if(World.getBlockID(coords.x+element.x,coords.y+element.y,coords.z+element.z)==0){
-                        World.setBlock(coords.x+element.x,coords.y+element.y,coords.z+element.z,fruit.id,fruit.data);					
+                        World.setBlock(coords.x+element.x,coords.y+element.y,coords.z+element.z,fruit.id,fruit.data);                   
                         if(activate){
                             World.addTileEntity(coords.x+element.x,coords.y+element.y,coords.z+element.z)
                         }
@@ -719,19 +728,19 @@ var TreeRegistry = {
         "harvesTree":{
             proto: harvestTree
             deployFunc:function(treeClass){},
-			config:{
-				fruitCount:7
-			}
+            config:{
+                fruitCount:7
+            }
             heirs:{
                 "apple":{
                     sapling:{
                         item:ItemID.appleSapling,
                         block:BlockID.appleSapling
                     },
-					fruit:{
-						block:BlockID.apple,
-						item:260
-					}
+                    fruit:{
+                        block:BlockID.apple,
+                        item:260
+                    }
                 }
             }
         }
@@ -740,7 +749,7 @@ var TreeRegistry = {
         this.treeClasses[name] = {
             proto:null,
             logic:{},
-			deriveFunc:null,
+            deriveFunc:null,
             deployFunc:function(){},
             config:{},
             heirs:{}
@@ -750,18 +759,18 @@ var TreeRegistry = {
         var cl = this.treeClasses[classs];
         if(cl){
             cl.heirs[tree.name] = {
-				sapling:{
-					item:tree.sapling.item,
-					block:tree.sapling.block
-				},
-				fruit:{
-					item:tree.fruit.item,
-					block:tree.fruit.block
-				}
-			};
-			if(cl.deriveFunc){
-				cl.deriveFunc(cl);
-			}
+                sapling:{
+                    item:tree.sapling.item,
+                    block:tree.sapling.block
+                },
+                fruit:{
+                    item:tree.fruit.item,
+                    block:tree.fruit.block
+                }
+            };
+            if(cl.deriveFunc){
+                cl.deriveFunc(cl);
+            }
         }
     },
     deployTree:function(xx,yy,zz,tree){
@@ -785,33 +794,33 @@ var TreeRegistry = {
         }
     },
     addTreeGeneration:function(tree,biomes,countt,chance){
-		countt.enabled = !Flags.addFlag(tree);
-		Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
-			if(Math.random() <chance&&countt.enabled){
-				var count = 0;
-				if(typeof(countt)=="object"){
-					count = Random.Int(countt.min,countt.max);
-				}else{
-					count = countt;
-				}
-				for(var ccount = 1;ccount<=count;ccount++){
-					var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
-					coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
-					if(biomes==null){						
+        countt.enabled = !Flags.addFlag(tree);
+        Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
+            if(Math.random() <chance&&countt.enabled){
+                var count = 0;
+                if(typeof(countt)=="object"){
+                    count = Random.Int(countt.min,countt.max);
+                }else{
+                    count = countt;
+                }
+                for(var ccount = 1;ccount<=count;ccount++){
+                    var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
+                    coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
+                    if(biomes==null){                       
                         TreeRegistry.deployTree(coords.x,coords.y,coords.z,tree); 
                         //alert("++ tree"); 
-					}else{
-						for(var idd in biomes ){
-							var id = biomes[idd];
-							if((World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)==id)&&(World.getBlockID(coords.x, coords.y, coords.z) == 2)){
+                    }else{
+                        for(var idd in biomes ){
+                            var id = biomes[idd];
+                            if((World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)==id)&&(World.getBlockID(coords.x, coords.y, coords.z) == 2)){
                                 TreeRegistry.deployTree(coords.x,coords.y,coords.z,tree); 
                                // alert("++ tree"); 
-							}
-						}
-					}           
-				}
-			}
-		});
+                            }
+                        }
+                    }           
+                }
+            }
+        });
     },
     registerClassDeploy:function(classs,func){
         this.treeClasses[classs].deployFunc = func;
@@ -848,81 +857,81 @@ var TreeRegistry = {
             }
         }
     },
-	generateStandartTreePrototypeWithParams:function(params){
-		/*
-			var params = {
-				leaves:{
-					id:17,
-					data:0
-				},
-				wood:{
-					id:18,
-					data:0
-				}
-			}
-		*/
-		if(params.leaves){
-			if(!params.leaves.id){
-				params.leaves.id = 0;
-			}
-			if(!params.leaves.data){
-				params.leaves.data = 0;
-			}
-		}
-		else{
-			params.leaves = {id:17,data:0};
-		}
-		if(params.wood){
-			if(!params.wood.id){
-				params.wood.id = 0;
-			}
-			if(!params.wood.data){
-				params.wood.data = 0;
-			}
-		}else{
-			params.wood = {id:18,data:0};
-		}
-		var standartHarvestCraftTreePrototype = new TreePrototype();
-		standartHarvestCraftTreePrototype.addStructure([{
-			id:	params.leaves.id,
-			data:params.leaves.data,
-			box:{
-				pos1:{x:-2,y:3,z:-2},
-				pos2:{x:2,y:4,z:2}
-			}
-		},
-		{
-			id:	params.leaves.id,
-			data:params.leaves.data,
-			box:{
-				pos1:{x:-1,y:5,z:0},
-				pos2:{x:1,y:6,z:0}
-			}
-		},
-		{
-			id:	params.leaves.id,
-			data:params.leaves.data,
-			box:{
-				pos1:{x:0,y:5,z:-1},
-				pos2:{x:0,y:6,z:1}
-			}
-		},
-		{
-			id:	params.wood.id,
-			data:params.wood.data,
-			box:{
-				pos1:{x:0,y:0,z:0},
-				pos2:{x:0,y:5,z:0}
-			}
-		}]);
-		standartHarvestCraftTreePrototype.addFruitsArea([{
-			box:{
-				pos1:{x:-2,y:2,z:-2}, 
-				pos2:{x:2,y:2,z:2}
-			}
-		}]);
-		return standartHarvestCraftTreePrototype;
-	}
+    generateStandartTreePrototypeWithParams:function(params){
+        /*
+            var params = {
+                leaves:{
+                    id:17,
+                    data:0
+                },
+                wood:{
+                    id:18,
+                    data:0
+                }
+            }
+        */
+        if(params.leaves){
+            if(!params.leaves.id){
+                params.leaves.id = 0;
+            }
+            if(!params.leaves.data){
+                params.leaves.data = 0;
+            }
+        }
+        else{
+            params.leaves = {id:17,data:0};
+        }
+        if(params.wood){
+            if(!params.wood.id){
+                params.wood.id = 0;
+            }
+            if(!params.wood.data){
+                params.wood.data = 0;
+            }
+        }else{
+            params.wood = {id:18,data:0};
+        }
+        var standartHarvestCraftTreePrototype = new TreePrototype();
+        standartHarvestCraftTreePrototype.addStructure([{
+            id: params.leaves.id,
+            data:params.leaves.data,
+            box:{
+                pos1:{x:-2,y:3,z:-2},
+                pos2:{x:2,y:4,z:2}
+            }
+        },
+        {
+            id: params.leaves.id,
+            data:params.leaves.data,
+            box:{
+                pos1:{x:-1,y:5,z:0},
+                pos2:{x:1,y:6,z:0}
+            }
+        },
+        {
+            id: params.leaves.id,
+            data:params.leaves.data,
+            box:{
+                pos1:{x:0,y:5,z:-1},
+                pos2:{x:0,y:6,z:1}
+            }
+        },
+        {
+            id: params.wood.id,
+            data:params.wood.data,
+            box:{
+                pos1:{x:0,y:0,z:0},
+                pos2:{x:0,y:5,z:0}
+            }
+        }]);
+        standartHarvestCraftTreePrototype.addFruitsArea([{
+            box:{
+                pos1:{x:-2,y:2,z:-2}, 
+                pos2:{x:2,y:2,z:2}
+            }
+        }]);
+        return standartHarvestCraftTreePrototype;
+    }
 };
 
 Callback.addCallback("DestroyBlock", function(coords, block, player){
@@ -951,8 +960,8 @@ Callback.addCallback("ItemUse", function(coords, item, block){
         294:true
     };          
     if(block.id==2&&trueTool[item.id]){
-        var nn = Random.Int(0,400);				
-        if(nn<Harvest.grassDropsArray.length){  			
+        var nn = Random.Int(0,400);             
+        if(nn<Harvest.grassDropsArray.length){              
             Harvest.dropPlant(Harvest.grassDropsArray[nn],coords.x,coords.y+1,coords.z);
         }
     }

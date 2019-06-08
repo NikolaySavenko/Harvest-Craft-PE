@@ -3,9 +3,9 @@
 CropRegistry.registerWithID("strawberrycrop","strawberrycrop","strawberrycrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.strawberrycrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.strawberrycrop,
-	drop:ItemID.strawberry,
-	seed:ItemID.strawberry_seed
+    id:BlockID.strawberrycrop,
+    drop:ItemID.strawberry,
+    seed:ItemID.strawberry_seed
 });
 
 
@@ -16,9 +16,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("raspberrycrop","raspberrycrop","raspberry_crop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.raspberrycrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.raspberrycrop,
-	drop:ItemID.raspberry,
-	seed:ItemID.raspberry_seed
+    id:BlockID.raspberrycrop,
+    drop:ItemID.raspberry,
+    seed:ItemID.raspberry_seed
 });
 
 
@@ -29,9 +29,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("cranberrycrop","cranberrycrop","cranberrycrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.cranberrycrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.cranberrycrop,
-	drop:ItemID.cranberry,
-	seed:ItemID.cranberry_seed
+    id:BlockID.cranberrycrop,
+    drop:ItemID.cranberry,
+    seed:ItemID.cranberry_seed
 });
 
 
@@ -42,9 +42,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("blueberrycrop","blueberrycrop","blueberrycrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.blueberrycrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.blueberrycrop,
-	drop:ItemID.blueberry,
-	seed:ItemID.blueberry_seed
+    id:BlockID.blueberrycrop,
+    drop:ItemID.blueberry,
+    seed:ItemID.blueberry_seed
 });
 
 
@@ -55,9 +55,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("blackberrycrop","blackberrycrop","blackberrycrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.blackberrycrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.blackberrycrop,
-	drop:ItemID.blackberry,
-	seed:ItemID.blackberry_seed
+    id:BlockID.blackberrycrop,
+    drop:ItemID.blackberry,
+    seed:ItemID.blackberry_seed
 });
 
 
@@ -68,9 +68,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("grapecrop","grapecrop","grapecrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.grapecrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.grapecrop,
-	drop:ItemID.grape,
-	seed:ItemID.grape_seed
+    id:BlockID.grapecrop,
+    drop:ItemID.grape,
+    seed:ItemID.grape_seed
 });
 
 
@@ -81,9 +81,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("cucumbercrop","cucumbercrop","cucumbercrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.cucumbercrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.cucumbercrop,
-	drop:ItemID.cucumber,
-	seed:ItemID.cucumber_seed
+    id:BlockID.cucumbercrop,
+    drop:ItemID.cucumber,
+    seed:ItemID.cucumber_seed
 });
 
 
@@ -94,9 +94,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("onioncrop","onioncrop","onioncrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.onioncrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.onioncrop,
-	drop:ItemID.onion,
-	seed:ItemID.onion_seed
+    id:BlockID.onioncrop,
+    drop:ItemID.onion,
+    seed:ItemID.onion_seed
 });
 
 
@@ -107,9 +107,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("cabbagecrop","cabbagecrop","cabbagecrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.cabbagecrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.cabbagecrop,
-	drop:ItemID.cabbage,
-	seed:ItemID.cabbage_seed
+    id:BlockID.cabbagecrop,
+    drop:ItemID.cabbage,
+    seed:ItemID.cabbage_seed
 });
 
 
@@ -120,9 +120,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("tomatocrop","tomatocrop","tomatocrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.tomatocrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.tomatocrop,
-	drop:ItemID.tomato,
-	seed:ItemID.tomato_seed
+    id:BlockID.tomatocrop,
+    drop:ItemID.tomato,
+    seed:ItemID.tomato_seed
 });
 
 
@@ -133,9 +133,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("garliccrop","garliccrop","garliccrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.garliccrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.garliccrop,
-	drop:ItemID.garlic,
-	seed:ItemID.garlic_seed
+    id:BlockID.garliccrop,
+    drop:ItemID.garlic,
+    seed:ItemID.garlic_seed
 });
 
 
@@ -146,9 +146,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("bellpeppercrop","bellpeppercrop","bellpeppercrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.bellpeppercrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.bellpeppercrop,
-	drop:ItemID.bellpepper,
-	seed:ItemID.bellpepper_seed
+    id:BlockID.bellpeppercrop,
+    drop:ItemID.bellpepper,
+    seed:ItemID.bellpepper_seed
 });
 
 
@@ -159,9 +159,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("lettucecrop","lettucecrop","lettucecrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.lettucecrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.lettuce,
-	drop:ItemID.lettuce,
-	seed:ItemID.lettuce_seed
+    id:BlockID.lettucecrop,
+    drop:ItemID.lettuce,
+    seed:ItemID.lettuce_seed
 });
 
 
@@ -172,9 +172,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("coffeebeancrop","coffeebeancrop","coffeebeancrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.coffeebeancrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.coffeebeancrop,
-	drop:ItemID.coffee_beans,
-	seed:ItemID.coffee_seed
+    id:BlockID.coffeebeancrop,
+    drop:ItemID.coffee_beans,
+    seed:ItemID.coffee_seed
 });
 
 
@@ -185,9 +185,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("peascrop","peascrop","peascrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.peascrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.peascrop,
-	drop:ItemID.peas,
-	seed:ItemID.peas_seed
+    id:BlockID.peascrop,
+    drop:ItemID.peas,
+    seed:ItemID.peas_seed
 });
 
 
@@ -198,9 +198,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("chilipeppercrop","chilipeppercrop","chilipeppercrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.chilipeppercrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.chilipeppercrop,
-	drop:ItemID.chili_pepper,
-	seed:ItemID.chili_pepper_seed
+    id:BlockID.chilipeppercrop,
+    drop:ItemID.chili_pepper,
+    seed:ItemID.chili_pepper_seed
 });
 
 
@@ -211,9 +211,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("spiceleafcrop","spiceleafcrop","spiceleafcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.spiceleafcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.spiceleafcrop,
-	drop:ItemID.spice_leaf,
-	seed:ItemID.spice_leaf_seed
+    id:BlockID.spiceleafcrop,
+    drop:ItemID.spice_leaf,
+    seed:ItemID.spice_leaf_seed
 });
 
 
@@ -224,9 +224,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("corncrop","corncrop","corncrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.corncrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.corncrop,
-	drop:ItemID.corn,
-	seed:ItemID.corn_seed
+    id:BlockID.corncrop,
+    drop:ItemID.corn,
+    seed:ItemID.corn_seed
 });
 
 
@@ -237,9 +237,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("candleberrycrop","candleberrycrop","candleberrycrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.candleberrycrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.candleberrycrop,
-	drop:ItemID.candleberry,
-	seed:ItemID.candleberryseed
+    id:BlockID.candleberrycrop,
+    drop:ItemID.candleberry,
+    seed:ItemID.candleberryseed
 });
 
 
@@ -250,9 +250,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("curryleaf","curryleaf","curryleafcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.curryleaf);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.curryleaf,
-	drop:ItemID.curryleaf,
-	seed:ItemID.curryleaf_seed
+    id:BlockID.curryleaf,
+    drop:ItemID.curryleaf,
+    seed:ItemID.curryleaf_seed
 });
 
 
@@ -263,9 +263,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("cottoncrop","cottoncrop","cottoncrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.cottoncrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.cottoncrop,
-	drop:ItemID.cotton,
-	seed:ItemID.cotton_seed
+    id:BlockID.cottoncrop,
+    drop:ItemID.cotton,
+    seed:ItemID.cotton_seed
 });
 
 
@@ -276,9 +276,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("rutabagacrop","rutabagacrop","rutabagacrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.rutabagacrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.rutabagacrop,
-	drop:ItemID.rutabaga,
-	seed:ItemID.rutabaga_seed
+    id:BlockID.rutabagacrop,
+    drop:ItemID.rutabaga,
+    seed:ItemID.rutabaga_seed
 });
 
 
@@ -289,9 +289,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("beancrop","beancrop","beancrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.beancrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.beancrop,
-	drop:ItemID.bean,
-	seed:ItemID.bean_seed
+    id:BlockID.beancrop,
+    drop:ItemID.bean,
+    seed:ItemID.bean_seed
 });
 
 
@@ -302,9 +302,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("waterchestnutcrop","waterchestnutcrop","waterchestnutcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.waterchestnutcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.waterchestnutcrop,
-	drop:ItemID.waterchestnut,
-	seed:ItemID.waterchestnut_seed
+    id:BlockID.waterchestnutcrop,
+    drop:ItemID.waterchestnut,
+    seed:ItemID.waterchestnut_seed
 });
 
 
@@ -315,9 +315,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("ricecrop","ricecrop","ricecrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.ricecrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.ricecrop,
-	drop:ItemID.rice,
-	seed:ItemID.rice_seed
+    id:BlockID.ricecrop,
+    drop:ItemID.rice,
+    seed:ItemID.rice_seed
 });
 
 
@@ -328,9 +328,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("mustardseedscrop","mustardseedscrop","mustardseedscrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.mustardseedscrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.mustardseedscrop,
-	drop:ItemID.mustardseeds,
-	seed:ItemID.mustard_seed
+    id:BlockID.mustardseedscrop,
+    drop:ItemID.mustardseeds,
+    seed:ItemID.mustard_seed
 });
 
 
@@ -341,9 +341,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("gingercrop","gingercrop","gingercrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.gingercrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.gingercrop,
-	drop:ItemID.ginger,
-	seed:ItemID.ginger_seed
+    id:BlockID.gingercrop,
+    drop:ItemID.ginger,
+    seed:ItemID.ginger_seed
 });
 
 
@@ -354,9 +354,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("spinachcrop","spinachcrop","spinachcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.spinachcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.spinachcrop,
-	drop:ItemID.spinach,
-	seed:ItemID.spinach_seed
+    id:BlockID.spinachcrop,
+    drop:ItemID.spinach,
+    seed:ItemID.spinach_seed
 });
 
 
@@ -366,9 +366,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("cactusfruitcrop","cactusfruitcrop","cactusfruitcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.cactusfruitcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.cactusfruitcrop,
-	drop:ItemID.cactusfruit,
-	seed:ItemID.cactusfruit_seed
+    id:BlockID.cactusfruitcrop,
+    drop:ItemID.cactusfruit,
+    seed:ItemID.cactusfruit_seed
 });
 
 
@@ -378,9 +378,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("cantaloupecrop","cantaloupecrop","cantaloupecrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.cantaloupecrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.cantaloupecrop,
-	drop:ItemID.cantaloupe,
-	seed:ItemID.cantaloupe_seed
+    id:BlockID.cantaloupecrop,
+    drop:ItemID.cantaloupe,
+    seed:ItemID.cantaloupe_seed
 });
 
 
@@ -390,9 +390,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("kiwicrop","kiwicrop","kiwicrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.kiwicrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.kiwicrop,
-	drop:ItemID.kiwi,
-	seed:ItemID.kiwi_seed
+    id:BlockID.kiwicrop,
+    drop:ItemID.kiwi,
+    seed:ItemID.kiwi_seed
 });
 
 
@@ -402,9 +402,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("pineapplecrop","pineapplecrop","pineapplecrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.pineapplecrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.pineapplecrop,
-	drop:ItemID.pineapple,
-	seed:ItemID.pineapple_seed
+    id:BlockID.pineapplecrop,
+    drop:ItemID.pineapple,
+    seed:ItemID.pineapple_seed
 });
 
 
@@ -414,9 +414,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("artichokecrop","artichokecrop","artichokecrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.artichokecrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.artichokecrop,
-	drop:ItemID.artichoke,
-	seed:ItemID.artichoke_seed
+    id:BlockID.artichokecrop,
+    drop:ItemID.artichoke,
+    seed:ItemID.artichoke_seed
 });
 
 
@@ -426,9 +426,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("asparaguscrop","asparaguscrop","asparaguscrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.asparaguscrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.asparaguscrop,
-	drop:ItemID.asparagus,
-	seed:ItemID.asparagus_seed
+    id:BlockID.asparaguscrop,
+    drop:ItemID.asparagus,
+    seed:ItemID.asparagus_seed
 });
 
 
@@ -438,9 +438,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("bambooshootcrop","bambooshootcrop","bambooshootcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.bambooshootcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.bambooshootcrop,
-	drop:ItemID.bambooshoot,
-	seed:ItemID.bambooshoot_seed
+    id:BlockID.bambooshootcrop,
+    drop:ItemID.bambooshoot,
+    seed:ItemID.bambooshoot_seed
 });
 
 
@@ -450,9 +450,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("broccolicrop","broccolicrop","broccolicrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.broccolicrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.broccolicrop,
-	drop:ItemID.broccoli,
-	seed:ItemID.broccoli_seed
+    id:BlockID.broccolicrop,
+    drop:ItemID.broccoli,
+    seed:ItemID.broccoli_seed
 });
 
 
@@ -462,9 +462,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("brusselsproutcrop","brusselsproutcrop","brusselsproutcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.brusselsproutcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.brusselsproutcrop,
-	drop:ItemID.brusselsprout,
-	seed:ItemID.brusselsprout_seed
+    id:BlockID.brusselsproutcrop,
+    drop:ItemID.brusselsprout,
+    seed:ItemID.brusselsprout_seed
 });
 
 
@@ -474,9 +474,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("cauliflowercrop","cauliflowercrop","cauliflowercrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.cauliflowercrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.cauliflowercrop,
-	drop:ItemID.cauliflower,
-	seed:ItemID.cauliflower_seed
+    id:BlockID.cauliflowercrop,
+    drop:ItemID.cauliflower,
+    seed:ItemID.cauliflower_seed
 });
 
 
@@ -487,9 +487,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("celerycrop","celerycrop","celerycrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.celerycrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.celerycrop,
-	drop:ItemID.celery,
-	seed:ItemID.celery_seed
+    id:BlockID.celerycrop,
+    drop:ItemID.celery,
+    seed:ItemID.celery_seed
 });
 
 
@@ -500,9 +500,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("radishcrop","radishcrop","radishcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.radishcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.radishcrop,
-	drop:ItemID.radish,
-	seed:ItemID.radish_seed
+    id:BlockID.radishcrop,
+    drop:ItemID.radish,
+    seed:ItemID.radish_seed
 });
 
 
@@ -513,9 +513,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("eggplantcrop","eggplantcrop","eggplantcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.eggplantcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.eggplantcrop,
-	drop:ItemID.eggplant,
-	seed:ItemID.eggplant_seed
+    id:BlockID.eggplantcrop,
+    drop:ItemID.eggplant,
+    seed:ItemID.eggplant_seed
 });
 
 
@@ -525,9 +525,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("leekcrop","leekcrop","leekcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.leekcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.leekcrop,
-	drop:ItemID.leek,
-	seed:ItemID.leek_seed
+    id:BlockID.leekcrop,
+    drop:ItemID.leek,
+    seed:ItemID.leek_seed
 });
 
 
@@ -537,9 +537,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("okracrop","okracrop","okracrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.okracrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.okracrop,
-	drop:ItemID.okra,
-	seed:ItemID.okra_seed
+    id:BlockID.okracrop,
+    drop:ItemID.okra,
+    seed:ItemID.okra_seed
 });
 
 
@@ -549,9 +549,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("parsnipcrop","parsnipcrop","parsnipcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.parsnipcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.parsnipcrop,
-	drop:ItemID.parsnip,
-	seed:ItemID.parsnip_seed
+    id:BlockID.parsnipcrop,
+    drop:ItemID.parsnip,
+    seed:ItemID.parsnip_seed
 });
 
 
@@ -562,9 +562,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("rhubarbcrop","rhubarbcrop","rhubarbcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.rhubarbcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.rhubarbcrop,
-	drop:ItemID.rhubarb,
-	seed:ItemID.rhubarb_seed
+    id:BlockID.rhubarbcrop,
+    drop:ItemID.rhubarb,
+    seed:ItemID.rhubarb_seed
 });
 
 
@@ -574,9 +574,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("scallioncrop","scallioncrop","scallioncrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.scallioncrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.scallioncrop,
-	drop:ItemID.scallion,
-	seed:ItemID.scallion_seed
+    id:BlockID.scallioncrop,
+    drop:ItemID.scallion,
+    seed:ItemID.scallion_seed
 });
 
 
@@ -586,9 +586,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("soybeancrop","soybeancrop","soybeancrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.soybeancrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.soybeancrop,
-	drop:ItemID.soybean,
-	seed:ItemID.soybean_seed
+    id:BlockID.soybeancrop,
+    drop:ItemID.soybean,
+    seed:ItemID.soybean_seed
 });
 
 
@@ -598,9 +598,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("sweetpotatocrop","sweetpotatocrop","sweetpotatocrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.sweetpotatocrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.sweetpotatocrop,
-	drop:ItemID.sweetpotato,
-	seed:ItemID.sweetpotato_seed
+    id:BlockID.sweetpotatocrop,
+    drop:ItemID.sweetpotato,
+    seed:ItemID.sweetpotato_seed
 });
 
 
@@ -610,9 +610,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("turnipcrop","turnipcrop","turnipcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.turnipcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.turnipcrop,
-	drop:ItemID.turnip,
-	seed:ItemID.turnip_seed
+    id:BlockID.turnipcrop,
+    drop:ItemID.turnip,
+    seed:ItemID.turnip_seed
 });
 
 
@@ -623,9 +623,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("peanutcrop","peanutcrop","peanutcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.peanutcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.peanutcrop,
-	drop:ItemID.peanut,
-	seed:ItemID.peanut_seed
+    id:BlockID.peanutcrop,
+    drop:ItemID.peanut,
+    seed:ItemID.peanut_seed
 });
 
 
@@ -635,9 +635,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("ryecrop","ryecrop","ryecrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.ryecrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.ryecrop,
-	drop:ItemID.rye,
-	seed:ItemID.rye_seed
+    id:BlockID.ryecrop,
+    drop:ItemID.rye,
+    seed:ItemID.rye_seed
 });
 
 
@@ -648,9 +648,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("zucchinicrop","zucchinicrop","zucchinicrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.zucchinicrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.zucchinicrop,
-	drop:ItemID.zucchini,
-	seed:ItemID.zucchini_seed
+    id:BlockID.zucchinicrop,
+    drop:ItemID.zucchini,
+    seed:ItemID.zucchini_seed
 });
 
 
@@ -661,9 +661,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("barleycrop","barleycrop","barleycrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.barleycrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.barleycrop,
-	drop:ItemID.barley,
-	seed:ItemID.barley_seed
+    id:BlockID.barleycrop,
+    drop:ItemID.barley,
+    seed:ItemID.barley_seed
 });
 
 
@@ -674,9 +674,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("oatscrop","oatscrop","oatscrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.oatscrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.oatscrop,
-	drop:ItemID.oats,
-	seed:ItemID.oats_seed
+    id:BlockID.oatscrop,
+    drop:ItemID.oats,
+    seed:ItemID.oats_seed
 });
 
 
@@ -687,9 +687,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("wintersquashcrop","wintersquashcrop","wintersquashcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.wintersquashcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.wintersquashcrop,
-	drop:ItemID.wintersquash,
-	seed:ItemID.wintersquash_seed
+    id:BlockID.wintersquashcrop,
+    drop:ItemID.wintersquash,
+    seed:ItemID.wintersquash_seed
 });
 
 
@@ -700,9 +700,9 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("tealeafcrop","tealeafcrop","tealeafcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.tealeafcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.tealeafcrop,
-	drop:ItemID.tealeaf,
-	seed:ItemID.tealeaf_seed
+    id:BlockID.tealeafcrop,
+    drop:ItemID.tealeaf,
+    seed:ItemID.tealeaf_seed
 });
 
 
@@ -712,7 +712,7 @@ CropRegistry.deriveCropAsClass("harvestcraft_crop",{
 CropRegistry.registerWithID("beetcrop","beetcrop","beetcrop",BLOCK_TYPE_CROP);
 PlantModel.crop(BlockID.beetcrop);
 CropRegistry.deriveCropAsClass("harvestcraft_crop",{
-	id:BlockID.beetcrop,
-	drop:ItemID.beet,
-	seed:ItemID.beet_seed
+    id:BlockID.beetcrop,
+    drop:ItemID.beet,
+    seed:ItemID.beet_seed
 });

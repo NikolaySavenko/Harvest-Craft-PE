@@ -1,6 +1,7 @@
 OTHER/header.js
 
 API/importLib.js
+API/ICRenderLib.js
 API/Prototypes.js
 
 DEBUG/translation.js
