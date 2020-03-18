@@ -1,2 +1,2 @@
-# Harvest Craft PE 2.4.4
-Legacy mod. Please dont use it
+# Harvest Craft PE 3.0
+In develop...
