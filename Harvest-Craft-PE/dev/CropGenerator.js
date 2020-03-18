@@ -58,10 +58,38 @@ var cropList = [
     "seaweed",
     "curryleaf",
     "sesameseeds",
-    "waterchestnut"
+    "waterchestnut",
+    "gigapickle",
+    "kale",
+    "agave",
+    "amaranth",
+    "arrowroot",
+    "cassava",
+    "chickpea",
+    "elderberry",
+    "flax",
+    "greengrape",
+    "huckleberry",
+    "jicama",
+    "jute",
+    "kenaf",
+    "kohlrabi",
+    "lentil",
+    "millet",
+    "mulberry",
+    "quinoa",
+    "sisal",
+    "taro",
+    "tomatillo",
+    "juniperberry"
 ];
 
 var CropGenerator = {
+
+    crops: { //TODO write this data
+        //"blackberry": {seed: "blackberryseed", item: "blackberry"}
+    },
+
     registerCrop: function(cropName){
         let seedID = CropGenerator.genSeed(cropName);
         let product = CropGenerator.genProduct(cropName);
