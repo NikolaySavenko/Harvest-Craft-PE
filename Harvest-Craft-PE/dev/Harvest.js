@@ -3,15 +3,6 @@ var Harvest = {
     //Этот модуль является сборником полезных методов для удобной работы с растениями и деревьями
     dropWithoutLeaves:{},
     grassDropsArray:[],
-    getStringID: function(intID,isItem){//TODO rewrite
-        var findFrom = isItem ? ItemID : BlockID;
-        for(var id in findFrom){
-            if(intID==findFrom[id]){
-                alert(id+" "+findFrom[id]+" "+intID);
-                return id;
-            }
-        }return null;
-    },
 
     addGrassDrop:function(item){
         Harvest.grassDropsArray.push(item);

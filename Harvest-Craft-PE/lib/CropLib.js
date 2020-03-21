@@ -15,11 +15,20 @@ function random(min, max){
 }
 
 var RENDER_TYPE_SQUARE = 6;
+var RENDER_TYPE_CROSS = 1;
 
 var CommonCrop = Block.createSpecialType({
 	base: 59,
     opaque: false,
     rendertype: RENDER_TYPE_SQUARE,
+    lightopacity: 0,
+    destroytime: 0
+});
+
+var CommonSapling = Block.createSpecialType({
+	base: 59,
+    opaque: false,
+    rendertype: RENDER_TYPE_CROSS,
     lightopacity: 0,
     destroytime: 0
 });
@@ -328,6 +337,127 @@ let CropParticles = $("CropParticles", {
     }
 });
 
+let GrasslikeCrop = $("GrasslikeCrop", {
+    extends: HarvestableCrop,
+    includes: [InterfaceCrop],
+
+
+    destroyBlock: function(coords, block, player){
+        this.checkFarmlandDestroy(coords, block);
+    },
+
+    checkFarmlandDestroy: function(coords, block){
+        let side = this.getSide();
+        if(!(this.isFarmland(block) && side)) return;
+
+        let relCoords = World.getRelativeCoords(coords.x, coords.y, coords.z, side);
+        let relBlock = World.getBlock(relCoords.x, relCoords.y, relCoords.z);
+        if(relBlock.id == parseInt(this.blockID)){
+            World.destroyBlock(relCoords.x, relCoords.y, relCoords.z);
+            this.destroyBlock(relCoords, relBlock, null);
+        }
+    },
+
+    __load__: function(){
+        this.super.__load__();
+        let shape = CropRegistry.shapeBySide[this.getSide()];
+        Block.setBlockShape(parseInt(this.blockID), shape[0], shape[1]);
+        Block.registerDropFunctionForID(parseInt(this.blockID), function(){
+            return [];
+        });
+
+        let self = this;
+
+        Callback.addCallback("DestroyBlock", function(coords, block, player){
+            self.destroyBlock(coords, block, player);
+        });
+    }
+});
+
+let NormalBush = $("NormalBush", {
+    extends: GrasslikeCrop,
+    includes: [InterfaceCrop],
+
+    collect: function(x, y, z){
+        let seed = this.params.seed;
+        World.drop(x, y, z, seed.id, 1, 0);
+        World.destroyBlock(x, y, z);
+    },
+
+    harvest: function(x, y, z, manual){;
+        let products = this.getProducts();
+        let prod2drop = [];
+        let count = random(2, 5);
+        for(let i = 0; i < count; i++){
+            let prod = products[random(0, products.length - 1)];
+            prod2drop.push(prod);
+        }
+        if(manual) this.drop(x, y, z, prod2drop);
+        return prod2drop;
+    },
+
+    __load__: function(){
+        this.super.__load__();
+
+        let self = this;
+
+        Callback.addCallback("ItemUse", function(coords, item, block){
+            if(block.id != parseInt(self.blockID)) return;
+            self.collect(coords.x, coords.y, coords.z, true);
+        });
+
+        Callback.addCallback("DestroyBlock", function(coords, block, player){
+            if(block.id != parseInt(self.blockID)) return;
+            self.harvest(coords.x, coords.y, coords.z, true);
+        });
+    }
+});
+
+let NormalSapling = $("NormalSapling", {
+    extends: GrasslikeCrop,
+    includes: [CropFertilizer, InterfaceCrop, CropParticles],
+
+    click: function(coords, item, block){
+        if(this.isFertilizer(item)){
+            this.emitParticles(coords.x, coords.y ,coords.z);
+            if(this.isReadyForFertilize(block)){
+                this.grow(coords.x, coords.y, coords.z);
+            }
+        }else{
+            this.harvest(coords.x, coords.y, coords.z, true);
+        }
+    },
+
+    isReadyForFertilize: function(block){
+        if(Math.random() < this.getGrowChanceViaFertilizer()) return true;
+        return false;
+    },
+
+    randomTick: function(x, y, z){
+        this.checkFarmland(x, y, z);
+        if(Math.random() < this.getGrowChance()) this.grow(x, y, z);
+    },
+
+    canGrow: function(x, y, z){return true},
+
+    grow: function(x, y, z){return true},
+
+    __load__:function(){
+        this.super.__load__();
+
+        let self = this;
+
+        Callback.addCallback("ItemUse", function(coords, item, block){
+            if(block.id != parseInt(self.blockID)) return;
+            self.click(coords, item, block);
+        });
+
+        Block.setRandomTickCallback(parseInt(self.blockID), function(x, y, z){
+            self.randomTick(x, y, z, self.getSide());
+        });
+    }
+});
+
 
 let NormalCrop = $("NormalCrop", {
     extends: HarvestableCrop,
@@ -337,11 +467,14 @@ let NormalCrop = $("NormalCrop", {
     getGrowChance: function(){return this.growChance},
 
     click: function(coords, item, block){
-        if(this.isReadyForFertilize(block) && this.isFertilizer(item) && this.canGrow(coords.x, coords.y, coords.z)){
-            this.grow(coords.x, coords.y, coords.z);
-            return;
+        if(this.isFertilizer(item) && !this.canBeHarvested(coords.x, coords.y ,coords.z)){
+            this.emitParticles(coords.x, coords.y ,coords.z);
+            if(this.isReadyForFertilize(block)){
+                this.grow(coords.x, coords.y, coords.z);
+            }
+        }else{
+            this.harvest(coords.x, coords.y, coords.z, true);
         }
-        this.harvest(coords.x, coords.y, coords.z, true);
     },
 
     isReadyForFertilize: function(block){
@@ -386,7 +519,6 @@ let NormalCrop = $("NormalCrop", {
     grow: function(x, y, z){
         let block = World.getBlock(x, y, z);
         if(this.canGrow(x, y ,z)){
-            this.emitParticles(x, y ,z);
             World.setBlock(x, y, z, block.id, block.data + 1);
             return true;
         }
@@ -430,6 +562,7 @@ EXPORT("RENDER_TYPE_SQUARE", RENDER_TYPE_SQUARE);
 
 //BlockTypes
 EXPORT("CommonCrop", CommonCrop);
+EXPORT("CommonSapling", CommonSapling);
 
 //classes
 EXPORT("AbstractCrop", AbstractCrop);
@@ -440,3 +573,6 @@ EXPORT("InterfaceCrop", InterfaceCrop);
 EXPORT("HarvestableCrop", HarvestableCrop);
 EXPORT("CropParticles", CropParticles);
 EXPORT("NormalCrop", NormalCrop);
+EXPORT("GrasslikeCrop", GrasslikeCrop);
+EXPORT("NormalSapling", NormalSapling);
+EXPORT("NormalBush", NormalBush);

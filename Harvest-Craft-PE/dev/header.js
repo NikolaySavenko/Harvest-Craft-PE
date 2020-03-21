@@ -31,13 +31,14 @@
 
 IMPORT("framework");
 IMPORT("CropLib");
+IMPORT("StorageInterface");
 
 var Random = {
-      //Этот модуль облегчает генерацию случайных чисел
-      Float:function(min,max){
-            return Math.random() * (max - min) + min;
-      },
-      Int:function(min,max){
-            return Math.floor(Math.random() * (max - min) ) + min;
-      }
+    //Этот модуль облегчает генерацию случайных чисел
+    Float:function(min,max){
+        return Math.random() * (max - min) + min;
+    },
+    Int:function(min,max){
+        return Math.floor(Math.random() * (max - min) ) + min;
+    }
 };

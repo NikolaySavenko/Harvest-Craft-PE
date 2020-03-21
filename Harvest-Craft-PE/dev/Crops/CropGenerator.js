@@ -4,8 +4,63 @@ var CropGenerator = {
         //"blackberry": {seed: "blackberryseed", item: "blackberry"}
     },
 
+    registerGardens: function(){
+        for(let name in gardenList){
+            this.registerGarden(name);
+        }
+    },
+
+    registerGarden: function(gardenName){
+        let products = this.getProductsForGarden(gardenName);
+        let placeItem = this.genGardenSeed(gardenName);
+        let cls = this.getGardenClass(gardenName);
+        CropRegistry.create(cls, {
+            id: gardenName,
+            creative: false,
+            seed: {
+                id: placeItem,
+                decrease: true
+            },
+            products: products
+        });
+    },
+
+    getGardenClass: function(gardenName){
+        if(gardenName == "aridgarden") return HarvestcraftAridGarden;
+        return HarvestcraftGarden;
+    },
+
+    genGardenSeed: function(gardenName){
+        let name = CropGenerator.getRegistryName(gardenName);
+
+        IDRegistry.genItemID(gardenName);
+        Item.createItem(gardenName, name, {name: gardenName, data: 0});
+
+        let numerlicID = ItemID[gardenName];
+        return numerlicID;
+    },
+
+    getProductsForGarden: function(gardenName){
+        let gardenProd = gardenList[gardenName];
+        let products = [];
+        for(let i in gardenProd){
+            let stringID = gardenProd[i];
+            let productID = this.getNumerlicID(stringID);
+            products.push({id: productID, count: {min: 1, max: 3}, data: 0});
+        }
+        return products;
+    },
+
+    getNumerlicID: function(stringID){
+        if(stringID.indexOf("minecraft:") != -1){
+            stringID = stringID.replace("minecraft:", "");
+            return VanillaItemID[stringID] || VanillaBlockID[stringID]
+        }
+        return ItemID[stringID];
+    },
+
     registerCrop: function(cropName){
-        let seedID = CropGenerator.genSeed(cropName);
+        let seedID = CropGenerator.genCropSeed(cropName);
         let product = CropGenerator.genProduct(cropName);
         CropRegistry.create(HarvestcraftCrop, {
             id: cropName + "_crop",
@@ -27,7 +82,7 @@ var CropGenerator = {
         }
     },
 
-    genSeed: function(cropName){
+    genCropSeed: function(cropName){
         let stringID = cropName + "seed";
         let name = CropGenerator.getRegistryName(cropName) + " Seed";
         let textureName = cropName + "seed";
@@ -59,3 +114,4 @@ var CropGenerator = {
 };
 
 CropGenerator.registerCrops();
+CropGenerator.registerGardens();

@@ -35,7 +35,6 @@ var ItemGenerator = {
     registerFood:function(id, food){
         IDRegistry.genItemID(id);
         Item.createFoodItem(id, id, {name: id, meta: 0}, {food: food});
-        //Logger.Log("food:  "+id,"HCORE");
     },
 
     registerTopTierFood: function(id, food){

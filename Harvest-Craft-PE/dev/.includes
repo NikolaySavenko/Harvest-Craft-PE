@@ -4,13 +4,17 @@ Harvest.js
 
 Crops/CropClasses.js
 Crops/cropList.js
+Crops/gardenList.js
 Crops/CropGenerator.js
 
+Blocks/salt.js
+Blocks/sinks.js
 Blocks/candle.js
+Blocks/animalTrap.js
 
 Items/ItemGenerator.js
 Items/wax.js
-ITEMS/baits.js
-ITEMS/armor.js
+Items/baits.js
+Items/armor.js
 Items/candle.js
 Items/food.js
