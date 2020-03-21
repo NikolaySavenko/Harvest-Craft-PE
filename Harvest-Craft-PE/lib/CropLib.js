@@ -152,7 +152,7 @@ let CropInterface = {
 };
 
 Callback.addCallback("PostLoaded", function(){
-    CropRegistry.debugObject(CropRegistry.crops);
+    //CropRegistry.debugObject(CropRegistry.crops);
 });
 
 Callback.addCallback("DestroyBlock", function(coords, block, player){
