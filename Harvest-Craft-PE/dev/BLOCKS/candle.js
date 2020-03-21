@@ -1,12 +1,26 @@
+var BLOCK_TYPE_CANDLE = Block.createSpecialType({
+    base: 50,
+    opaque: false,
+	lightopacity: 0,
+	rendertype: 1,
+	lightlevel: 10,
+	destroytime: 0,
+	explosionres: 0
+});
+
 var candleVariations = [];
 for(let i = 0; i < 16; i++){
-	candleVariations.push({name: "Candle", texture: [["empty", 0],["empty", 0],["candle", i]], inCreative: false})
+	candleVariations.push({name: "Candle", texture: [["candle", i]], inCreative: false})
 };
+
 IDRegistry.genBlockID("candle");
 Block.createBlock("candle", candleVariations, BLOCK_TYPE_CANDLE);
-//PlantModel.tree(BlockID.candle, 0);
+Block.setBlockShape(BlockID.candle,
+	{x: 0, y: 0, z: 0},
+	{x: 1, y: 0.001, z: 1}
+);
+
 Block.setAnimateTickCallback(BlockID.candle, function(x, y, z, id, data) {
-	if(!particles) return;
 	var vel = {
 		x: Random.Float(-0.01, 0.01),
 		y: Random.Float(-0.01, 0.01),
