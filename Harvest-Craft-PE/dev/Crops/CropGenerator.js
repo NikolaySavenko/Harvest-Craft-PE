@@ -36,6 +36,8 @@ var CropGenerator = {
         Item.createItem(stringID, name, {name: textureName, data: 0});
 
         let numerlicID = ItemID[stringID];
+        Harvest.addGrassDrop(numerlicID);
+
         return numerlicID;
     },
 

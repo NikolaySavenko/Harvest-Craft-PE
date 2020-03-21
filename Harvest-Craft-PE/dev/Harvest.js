@@ -3,7 +3,7 @@ var Harvest = {
     //Этот модуль является сборником полезных методов для удобной работы с растениями и деревьями
     dropWithoutLeaves:{},
     grassDropsArray:[],
-    getStringID: function(intID,isItem){
+    getStringID: function(intID,isItem){//TODO rewrite
         var findFrom = isItem ? ItemID : BlockID;
         for(var id in findFrom){
             if(intID==findFrom[id]){
@@ -29,12 +29,6 @@ var Harvest = {
             }
         });
         Harvest.dropWithoutLeaves[iiid] = true;
-    },
-
-    setFood:function(id,name,food){
-        IDRegistry.genItemID(id);
-        Item.createFoodItem(id, name, {name: id, meta: 0}, {food: food});
-        //Logger.Log("food:  "+id,"HCORE");
     },
 
     debugRecipe:function(id,ingredients){

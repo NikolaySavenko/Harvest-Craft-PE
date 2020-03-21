@@ -1,14 +1,16 @@
 header.js
 
+Harvest.js
+
 Crops/CropClasses.js
 Crops/cropList.js
 Crops/CropGenerator.js
 
-Harvest.js
-
 Blocks/candle.js
 
-
-
-
+Items/ItemGenerator.js
+Items/wax.js
+ITEMS/baits.js
+ITEMS/armor.js
 Items/candle.js
+Items/food.js
