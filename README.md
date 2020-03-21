@@ -1,2 +1,2 @@
-# Harvest Craft PE 3.0
-In develop...
+# Harvest Craft PE 2.4.6
+Adapted for Horizon
