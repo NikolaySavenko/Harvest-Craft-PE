@@ -11,7 +11,7 @@ CropRegistry.registerClass("harvestcraft_crop");
 CropRegistry.registerClassConfig("harvestcraft_crop",{
     ageSpeed:__config__.access("other.ageSpeed.crops"),
     manure:{id:351,data:15},
-    farmland:[{id:60,data:0},{id:60,data:7}],
+    farmland:[{id:60,data:0},{id:60,data:-1}],
     seedsPlaceFunc:true,
     growStages:3,
     supportAgricraft:true

@@ -1,8 +1,8 @@
 //Harvest Core by Nikolay Savenko
-//API level: 2.4.5
+//API level: 2.4.6
 LIBRARY({
     name:"Harvest_Core",
-    version:8,
+    version: 9,
     shared:true,
     api:"CoreEngine"
 });
@@ -342,7 +342,9 @@ var CropRegistry = {
                 Item.registerUseFunctionForID(crop.seed, function(coords, item, block){
                         for(var i in cfg.farmland){
                             var farmland = cfg.farmland[i];
-                            if(block.id == farmland.id&&block.data == farmland.data){
+                            Debug.m(farmland);
+                            Debug.m(block);
+                            if(block.id == farmland.id && (block.data == farmland.data || farmland.data == -1) ){
                                 World.setBlock(coords.x,coords.y+1,coords.z,crop.id ,0);
                                 Player.setCarriedItem(crop.seed, item.count - 1, 0);
                                 if(cl.logic){
