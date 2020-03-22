@@ -12,27 +12,6 @@ var Harvest = {
         Harvest.toolList[tool] = true;
     },
 
-    registerLeavesDroppingBlock:function(iiid){
-        Callback.addCallback("DestroyBlock", function(coords, block, player){
-            if(World.getBlockID(coords.x,coords.y-1,coords.z)==iiid){
-                World.destroyBlock(coords.x, coords.y-1, coords.z,true);
-                World.removeTileEntity(coords.x, coords.y-1, coords.z);
-            }
-        });
-        Harvest.dropWithoutLeaves[iiid] = true;
-    },
-
-    debugRecipe:function(id,ingredients){
-        if(!id.id){
-            alert("invalid recipe id: "+id.id);
-        }
-        for(var i in ingredients){
-            if(!ingredients[i].id){
-                alert("invalid ing: "+ingredients[i].id+"   in recipe of: "+id.id);
-            }
-        }
-    },
-
     addBlockGeneration:function(block,biomes,cccount,chance){//TODO rewrite
         block.enabled = !Flags.addFlag(block.id.toString());
 

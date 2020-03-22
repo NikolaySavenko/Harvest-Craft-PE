@@ -1,1 +1,0 @@
-IDRegistry.genItemID("aridGardenITEM");Item.createItem("aridGardenITEM", "Arid garden", {name: "aridgarden", meta: 0} ,{isTech: false} );
