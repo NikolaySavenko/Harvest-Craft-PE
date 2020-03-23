@@ -18,3 +18,7 @@ Items/baits.js
 Items/armor.js
 Items/candle.js
 Items/food.js
+
+Items/Dictionary.js
+Recipes.js
+RecipeRegistrator.js

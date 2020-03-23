@@ -63,7 +63,7 @@ var CropGenerator = {
         let seedID = CropGenerator.genCropSeed(cropName);
         let product = CropGenerator.genProduct(cropName);
         CropRegistry.create(HarvestcraftCrop, {
-            id: cropName + "_crop",
+            id: cropName,
             texture: cropName + "_stage",
             creative: false,
             seed: {
@@ -72,6 +72,7 @@ var CropGenerator = {
             },
             products: [{id: product, count: {min: 0, max: 3}, data: 0}]
         });
+        this.crops[cropName] = {seed: seedID, item: product};
         //alert("Crop registred " + cropName + "_crop "+ "seed " + seedID + " product "+ product);
     },
 
@@ -80,6 +81,14 @@ var CropGenerator = {
             let name = cropList[i];
             CropGenerator.registerCrop(name);
         }
+    },
+
+    getFood: function(cropName){
+        return ItemID[cropName];
+    },
+
+    getSeed: function(cropName){
+        return ItemID[cropName + "seed"]
     },
 
     genCropSeed: function(cropName){

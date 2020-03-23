@@ -19,6 +19,7 @@ var ItemGenerator = {
         for(let i in list){
             let id = list[i];
             this.registerFood(id, 2);
+            IDDictionary.assignResource("listAlljuice", ItemID[id]);
         }
     },
 

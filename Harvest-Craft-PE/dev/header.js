@@ -31,6 +31,7 @@
 
 IMPORT("framework");
 IMPORT("CropLib");
+IMPORT("IDDictionary");
 IMPORT("StorageInterface");
 
 var Random = {

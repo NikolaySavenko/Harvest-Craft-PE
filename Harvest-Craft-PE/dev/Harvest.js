@@ -2,7 +2,7 @@ var Harvest = {
     toolList:{},
     //Этот модуль является сборником полезных методов для удобной работы с растениями и деревьями
     dropWithoutLeaves:{},
-    grassDropsArray:[],
+    grassDropsArray: [],
 
     addGrassDrop:function(item){
         Harvest.grassDropsArray.push(item);
@@ -55,3 +55,12 @@ var Harvest = {
         });
     }
 };
+var dropSeedChance = .1;
+Callback.addCallback("DestroyBlock", function(coords, block, player){
+    if(Math.random() < dropSeedChance){
+        let max = Harvest.grassDropsArray.length - 1;
+        let id = Harvest.grassDropsArray[Random.Int(0, max)];
+        alert("drop seed");
+        World.drop(coords.x, coords.y, coords.z, id, 1, 0);
+    }
+});
