@@ -1,2 +1,3 @@
-# Harvest Craft PE 3.0
+# Harvest Craft PE 3.1
 In develop...
+Waiting for OreDictionary
