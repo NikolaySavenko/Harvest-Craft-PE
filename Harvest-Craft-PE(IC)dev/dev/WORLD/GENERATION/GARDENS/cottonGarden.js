@@ -1,1 +1,0 @@
-var TextileGardenCount = {	min: __config__.access("generation.group.gardens.cotton.min"),	max: __config__.access("generation.group.gardens.cotton.max")};Harvest.addBlockGeneration({id:BlockID.cottongarden, data:0, enabled:true},TextileGardenBiomes,TextileGardenCount,__config__.access("generation.numbers.gardens.cotton"));

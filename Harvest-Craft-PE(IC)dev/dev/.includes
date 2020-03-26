@@ -32,3 +32,4 @@ BLOCKS/candle.js
 CROPS/crops.js
 CROPS/gardens.js
 TREES/TreeGeneration.js
+WORLD/GENERATION/TREES/trees.js

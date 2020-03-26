@@ -196,9 +196,8 @@ var Harvest = {
 
         Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
             if(Math.random() <chance&&block.enabled){
-
                 var trueFarmlands = {};
-                var count; 
+                var count;
                 if(typeof(cccount)=="object"){
                     count = Random.Int(cccount.min,cccount.max);
                 }
@@ -512,7 +511,6 @@ var TreeRegistry = {
                             var id = biomes[idd];
                             if((World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)==id)&&(World.getBlockID(coords.x, coords.y, coords.z) == 2)){
                                 TreeRegistry.deployTree(coords.x,coords.y,coords.z,tree);
-                                alert("++ tree");
                             }
                         }
                     }

@@ -1,1 +1,0 @@
-var LeafyGardenCount = {	min: __config__.access("generation.group.gardens.leafy.min"),	max: __config__.access("generation.group.gardens.leafy.max")};Harvest.addBlockGeneration({id:BlockID.leafygarden, data:0, enabled:true},LeafyGardenBiomes,LeafyGardenCount,__config__.access("generation.numbers.gardens.leafy"));

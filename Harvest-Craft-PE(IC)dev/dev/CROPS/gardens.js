@@ -135,7 +135,6 @@ var AridGardenCount = {
 
 Harvest.addBlockGeneration({id: BlockID.aridgarden, data:0, enabled:true}, gardensBiomes.arid, AridGardenCount,
 __config__.access("generation.numbers.gardens.arid"));
-alert("Gen "+ BlockID["aridgarden"]+" biomes "+ gardensBiomes.arid.length + " count "+ AridGardenCount.min+' '+AridGardenCount.max + " number "+ __config__.access("generation.numbers.gardens.arid"));
 
 //OTHER
 

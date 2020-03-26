@@ -127,7 +127,7 @@ CropRegistry.create(HarvestcraftSapling, {
 });
 
 TreeRegistry.deriveTreeAsClass("Harvestcraft_middleFruitTree",{
-	name: "appleTree",
+	name: "apple",
 	sapling:{
 		block: BlockID["appleTreeSapling"],
 		item: saplingApple

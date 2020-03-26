@@ -1,1 +1,0 @@
-var BerryGardenCount = {	min: __config__.access("generation.group.gardens.berry.min"),	max: __config__.access("generation.group.gardens.berry.max")};Harvest.addBlockGeneration({id:BlockID.berrygarden, data:0, enabled:true},BerryGardenBiomes,BerryGardenCount,__config__.access("generation.numbers.gardens.berry"));
