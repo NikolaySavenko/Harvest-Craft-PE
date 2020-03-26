@@ -8,7 +8,7 @@
 				"berry":0.05,
 				"candleberry":0.05,
 				"cotton":0.05,
-				"arid":0.05,
+				"arid":0.2,
 				"tropical":0.05,
 				"leafy":0.05,
 				"frosty":0.05,
@@ -45,7 +45,7 @@
 				"coconut":0.005
 			},
 			"other":{
-				"salt":0.4 
+				"salt":0.4
 			}
 		},
 		"group":{
@@ -72,7 +72,7 @@
 				},
 				"arid":{
 					"min":1,
-					"max":2
+					"max":5
 				},
 				"tropical":{
 					"min":1,

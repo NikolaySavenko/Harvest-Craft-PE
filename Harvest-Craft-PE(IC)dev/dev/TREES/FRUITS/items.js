@@ -69,7 +69,7 @@ Harvest.setFood("starfruit","Starfruit",1);
 Harvest.setFood("almond","Almond",1);
 
 //peppercorn
-//Harvest.setFood("peppercorn","Peppercorn",1);
+Harvest.setFood("peppercorn","Peppercorn",1);
 
 //cashew
 Harvest.setFood("cashew","Cashew",1);

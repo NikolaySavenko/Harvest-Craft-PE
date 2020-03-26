@@ -1,3 +1,4 @@
+/*LEGACY
 var SaltBiomes = [0,24,10];
 	//var SaltBiomes = __config__.access("generation.biomes.gardens.SaltBiomes");
 var BerryGardenBiomes = [1,4,3,132,129,34, 18, 27, 28,13];
@@ -27,3 +28,34 @@ var TropicalGardenBiomes = [21, 22, 23, 149, 151,6, 134,36];
 var WaterGardenBiomes = [24,0];
 	//var WaterGardenBiomes = __config__.access("generation.biomes.gardens.WaterGardenBiomes");
 var FrostyGardenBiomes = [12,140,30,158,11,26];
+Callback.addCallback("ItemUse", function(coords, item, block){
+	alert(World.getBiome(coords.x, coords.z));
+});*/
+
+var SaltBiomes = [0,24,10];
+
+var gardensBiomes = {
+    arid: [2,35,37,135],
+
+    berry: [1,4,3,132,129,34, 18, 27, 28,13],
+
+    candleberry: [1,4,3,132,129,34, 18, 27, 28,13],
+
+    cotton: [1,4,3,132,129,34, 18, 27, 28],
+
+    frosty: [12,140,30,158,11,26],
+
+    gourd: [1,4,3,132,129,34, 18, 27, 28,13],
+
+    grass: [1,4,3,132,129,34, 18, 27, 28],
+
+    ground: [1,4,3,132,129,34,4, 18, 27, 28,13],
+
+    herb: [1,4,3,132,129,34, 18, 27, 28],
+
+    leafy: [1,4,3,132,129,34, 18, 27, 28,13],
+
+    stalk: [1,4,3,132,129,34, 18, 27, 28],
+
+    tropical: [21, 22, 23, 149, 151,6, 134,36]
+};
