@@ -1,3 +1,20 @@
+var CropsConfig = {
+    HarvestcraftCrop: {
+        ageSpeed: parseFloat(__config__.access("other.ageSpeed.crops")),
+        growChance: parseFloat(__config__.access("other.growChance.crops"))
+    },
+
+    HarvestcraftFruit: {
+        ageSpeed: parseFloat(__config__.access("other.ageSpeed.fruits")),
+        growChance: parseFloat(__config__.access("other.growChance.fruits"))
+    },
+
+    HarvestcraftSapling: {
+        ageSpeed: parseFloat(__config__.access("other.ageSpeed.saplings")),
+        growChance: parseFloat(__config__.access("other.growChance.saplings"))
+    }
+};
+
 var HarvestcraftCrop = $("HarvestCraftCrop", {
     extends: NormalCrop,
     blockType: CommonCrop,
@@ -6,13 +23,12 @@ var HarvestcraftCrop = $("HarvestCraftCrop", {
         count: 10,
         type: Native.ParticleType.happyVillager
     },
-    growChanceViaFertilizer: .5,
-    growChance: .5,
+    growChanceViaFertilizer: CropsConfig.HarvestcraftCrop.growChance,
+    growChance: CropsConfig.HarvestcraftCrop.ageSpeed,
     __load__: function(){
         this.super.__load__();
     }
 });
-
 var HarvestcraftFruit = $("HarvestcraftFruit", {
     extends: HarvestcraftCrop,
     blockType: CommonSapling,
@@ -23,8 +39,8 @@ var HarvestcraftFruit = $("HarvestcraftFruit", {
         count: 10,
         type: Native.ParticleType.happyVillager
     },
-    growChanceViaFertilizer: .5,
-    growChance: .5,
+    growChanceViaFertilizer: CropsConfig.HarvestcraftFruit.growChance,
+    growChance: CropsConfig.HarvestcraftFruit.ageSpeed,
     __load__: function(){
         this.super.__load__();
     }
@@ -57,8 +73,8 @@ let HarvestcraftSapling = $("HarvestcraftSapling", {
     blockType: CommonSapling,
     farmlands: [{id: 60, data: -1}, {id: 2, data: -1}, {id: 3, data: -1}],
 
-    growChanceViaFertilizer: .5,
-    growChance: .5,
+    growChanceViaFertilizer: CropsConfig.HarvestcraftSapling.growChance,
+    growChance: CropsConfig.HarvestcraftSapling.ageSpeed,
 
     maxSize: 1,
 
@@ -86,9 +102,7 @@ let HarvestcraftSapling = $("HarvestcraftSapling", {
     },
 
     grow: function(x, y, z){
-        alert("grow");
         let tree = TreeRegistry.getTreeFromSaplingBlock(parseInt(this.blockID));
-        alert("tree "+tree  +" "+this.blockID);
         TreeRegistry.deployTree(x, y, z, tree);
         return true
     },

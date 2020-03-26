@@ -34,7 +34,7 @@ var gardensDrop = {
         {id: ItemID.cucumber, count: {min: 1, max: 3}, data: 0},
         {id: ItemID.wintersquash, count: {min: 1, max: 3}, data: 0},
         {id: ItemID.cantaloupe, count: {min: 1, max: 3}, data: 0},
-        {id: 91, count: {min: 1, max: 3}, data: 0}
+        {id: 86, count: {min: 1, max: 3}, data: 0}
     ],
 
     grass: [

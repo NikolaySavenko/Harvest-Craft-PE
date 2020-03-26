@@ -7,7 +7,7 @@ Item.createItem("cocoa_powder", "Cocoa powder", {name: "cocoa_powder", meta: 0})
 Harvest.recipe({id:ItemID.cocoa_powder},[{id: ItemID.mortar_bowl, data: 0}, {id: 351, data: 3}]);
 
 IDRegistry.genItemID("almondbutter");
-Item.createItem("almondbutter", "Almond butter", {name: "almondbutter", meta: 0});
+Item.createItem("almondbutter", "Almond Butter", {name: "almondbutter", meta: 0});
 Harvest.recipe({id:ItemID.almondbutter},[{id: ItemID.juicer, data: 0}, {id: ItemID.almond, data: 0}]);
 
 Harvest.setFood("chocolate_milk","Chocolate milk",6);
