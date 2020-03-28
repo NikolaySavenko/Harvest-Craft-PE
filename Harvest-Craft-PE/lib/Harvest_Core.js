@@ -4,7 +4,7 @@
 LIBRARY({
     name:"Harvest_Core",
     version: 10,
-    shared:true,
+    shared: false,
     api:"CoreEngine"
 });
 

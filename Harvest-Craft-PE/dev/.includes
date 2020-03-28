@@ -1,12 +1,13 @@
-OTHER/header.js
+banner.js
 
 API/importLib.js
 API/CropClasses.js
 API/TreeClasses.js
+API/shared.js
 
-DEBUG/translation.js
+translation.js
 
-WORLD/GENERATION/GARDENS/biomes.js
+GENERATION/biomes.js
 
 ITEMS/tools.js
 ITEMS/baits.js
@@ -24,7 +25,7 @@ ITEMS/armor.js
 ITEMS/candles.js
 
 BLOCKS/salt.js
-WORLD/GENERATION/salt.js
+GENERATION/salt.js
 BLOCKS/sinks.js
 BLOCKS/animalTrap.js
 BLOCKS/candle.js
@@ -32,4 +33,4 @@ BLOCKS/candle.js
 CROPS/crops.js
 CROPS/gardens.js
 TREES/TreeGeneration.js
-WORLD/GENERATION/TREES/trees.js
+GENERATION/trees.js

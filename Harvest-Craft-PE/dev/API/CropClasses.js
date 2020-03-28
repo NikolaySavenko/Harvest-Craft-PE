@@ -15,8 +15,17 @@ var CropsConfig = {
     }
 };
 
+var FlowerCrop = $("FlowerCrop", {
+    registerAsFlower: function(id, datas){
+        for(var m = 0; m < datas; m++){
+            ForestryAPI.BeeRegistry.FLOWERS_FLOWERS.push(id + ':' + m);
+        }//TODO test flowers
+    }
+});
+
 var HarvestcraftCrop = $("HarvestCraftCrop", {
     extends: NormalCrop,
+    includes: [FlowerCrop],
     blockType: CommonCrop,
     maxSize: 2,
     particles: {
@@ -26,11 +35,14 @@ var HarvestcraftCrop = $("HarvestCraftCrop", {
     growChanceViaFertilizer: CropsConfig.HarvestcraftCrop.growChance,
     growChance: CropsConfig.HarvestcraftCrop.ageSpeed,
     __load__: function(){
+        let id = parseInt(this.blockID);
+        if(ForestryAPI) this.registerAsFlower(id, 3);
         this.super.__load__();
     }
 });
 var HarvestcraftFruit = $("HarvestcraftFruit", {
     extends: HarvestcraftCrop,
+    includes: [FlowerCrop],
     blockType: CommonSapling,
     side: 0,
     maxSize: 2,
@@ -42,16 +54,21 @@ var HarvestcraftFruit = $("HarvestcraftFruit", {
     growChanceViaFertilizer: CropsConfig.HarvestcraftFruit.growChance,
     growChance: CropsConfig.HarvestcraftFruit.ageSpeed,
     __load__: function(){
+        let id = parseInt(this.blockID);
+        if(ForestryAPI) this.registerAsFlower(id, 3);
         this.super.__load__();
     }
 });
 
 var HarvestcraftGarden = $("HarvestcraftGarden", {
     extends: NormalBush,
+    includes: [FlowerCrop],
     blockType: CommonSapling,
     farmlands: [{id: 60, data: -1}, {id: 2, data: -1}, {id: 3, data: -1}],
     maxSize: 1,
     __load__: function(){
+        let id = parseInt(this.blockID);
+        if(ForestryAPI) this.registerAsFlower(id, 1);
         this.super.__load__();
     }
 });
@@ -62,13 +79,20 @@ var HarvestcraftAridGarden = $("HarvestcraftAridGarden", {
     farmlands: [{id: 12, data: -1}],
     maxSize: 1,
     __load__: function(){
+        let id = parseInt(this.blockID);
+        if(ForestryAPI) this.registerAsFlower(id, 1);
         this.super.__load__();
+    },
+    registerAsFlower: function(id, datas){
+        for(var m = 0; m < datas; m++){
+            ForestryAPI.BeeRegistry.FLOWERS_CACTI.push(id + ':' + m);
+        }
     }
 });
 
 let HarvestcraftSapling = $("HarvestcraftSapling", {
     extends: PuttableCrop,
-    includes: [CropFertilizer, InterfaceCrop, CropParticles],
+    includes: [CropFertilizer, InterfaceCrop, CropParticles, FlowerCrop],
 
     blockType: CommonSapling,
     farmlands: [{id: 60, data: -1}, {id: 2, data: -1}, {id: 3, data: -1}],
@@ -129,6 +153,8 @@ let HarvestcraftSapling = $("HarvestcraftSapling", {
 
     __load__:function(){
         this.super.__load__();
+        let id = parseInt(this.blockID);
+        if(ForestryAPI) this.registerAsFlower(id, 1);
 
         let self = this;
         let shape = CropRegistry.shapeBySide[this.getSide()];
