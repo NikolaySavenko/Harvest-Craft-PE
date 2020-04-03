@@ -8,7 +8,6 @@ CropRegistry.create(HarvestcraftCrop, {
     },
     products: [{id: ItemID.spice_leaf, count: {min: 1, max: 3}, data: 0}]
 });
-
 // file: CROPS/chilipepper.js
 
 CropRegistry.create(HarvestcraftCrop, {
@@ -43,6 +42,7 @@ var cropList = [
     "onion",
     "cabbage",
     "tomato",
+    "rhubarb",
     "garlic",
     "bellpepper",
     "lettuce",
@@ -55,7 +55,7 @@ var cropList = [
     "bean",
     "waterchestnut",
     "rice",
-    "mustardseeds",
+    "mustard",
     "ginger",
     "spinach",
     "cactusfruit",

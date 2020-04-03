@@ -93,10 +93,11 @@ Item.createItem("corn_seed", "Corn Seed", {name: "corn_seed", meta: 0});
 Harvest.recipe({id:ItemID.corn_seed},[{id: ItemID.corn, data: 0}]);
 Harvest.addGrassDrop(ItemID.corn_seed);
 
+/*
 IDRegistry.genItemID("peppercorn_seed");
 Item.createItem("peppercorn_seed", "Peppercorn Seed", {name: "peppercorn_seed", meta: 0});
 Harvest.recipe({id:ItemID.peppercorn_seed},[{id: ItemID.peppercorn, data: 0}]);
-Harvest.addGrassDrop(ItemID.peppercorn_seed);
+Harvest.addGrassDrop(ItemID.peppercorn_seed);*/
 
 IDRegistry.genItemID("curryleaf_seed");
 Item.createItem("curryleaf_seed", "Curryleaf Seed", {name: "curryleafseed", meta: 0});

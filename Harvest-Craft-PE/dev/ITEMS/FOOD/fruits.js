@@ -17,7 +17,6 @@ Harvest.setFood("peas","Peas",1);
 Harvest.setFood("chili_pepper","Chilli pepper",1);
 Harvest.setFood("spice_leaf","Spice leaf",1);
 Harvest.setFood("corn","Corn",1);
-Harvest.setFood("peppercorn","Peppercorn",1);
 Harvest.setFood("curryleaf","Curryleaf",1);
 Harvest.setFood("cotton","Cotton",1);
 Harvest.setFood("bean","Bean",1);
