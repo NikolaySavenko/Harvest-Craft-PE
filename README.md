@@ -1,2 +1,2 @@
-# Harvest Craft PE 3.0.2
+# Harvest Craft PE 3.0.3
 Adapted for Horizon
