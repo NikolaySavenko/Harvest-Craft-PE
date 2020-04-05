@@ -47,11 +47,6 @@ var CropRegistry = {
         5: 4
     },
 
-    shapeBySide: {//TODO finish for other sides
-        0: [{x: 0, y: 1, z: 0}, {x: 1, y: .9999, z: 1}],
-        1: [{x: 0, y: 0, z: 0}, {x: 1, y: .001, z: 1}]
-    },
-
     crops: {},
 
     create: function(cls, params){
@@ -181,8 +176,20 @@ let AbstractCrop = $("AbstractCrop", {
     }
 });
 
+let CollisionShapeCrop = $("CollisionShapeCrop", {
+    shape: [7/8, 7/8, 7/8, 1/8, 1/8, 1/8],
+    setShape: function(id, datas){
+        for(var m = 0; m < datas; m++){
+            var shape = new ICRender.CollisionShape();
+            shape.addEntry().addBox(7/8, 7/8, 7/8, 1/8, 1/8, 1/8);
+            BlockRenderer.setCustomCollisionShape(id, m, shape);
+        }
+    }
+});
+
 let AbstractBlockCrop = $("AbstractBlockCrop", {
     extends: AbstractCrop,
+    includes: [CollisionShapeCrop],
 
     blocktype: undefined,
 
@@ -203,6 +210,9 @@ let AbstractBlockCrop = $("AbstractBlockCrop", {
         IDRegistry.genBlockID(params.id);
         Block.createBlock(params.id, params.variations, this.blockType);
         this.blockID = BlockID[params.id];
+
+        this.setShape(this.blockID, this.getMaxSize() + 1);
+
         if(this.blockMaterial){
             ToolAPI.registerBlockMaterial(this.blockID, this.blockMaterial);
         }
@@ -367,8 +377,6 @@ let GrasslikeCrop = $("GrasslikeCrop", {
 
     __load__: function(){
         this.super.__load__();
-        let shape = CropRegistry.shapeBySide[this.getSide()];
-        Block.setBlockShape(parseInt(this.blockID), shape[0], shape[1]);
         Block.registerDropFunctionForID(parseInt(this.blockID), function(){
             return [];
         });
@@ -536,8 +544,6 @@ let NormalCrop = $("NormalCrop", {
 
     __load__:function(){
         this.super.__load__();
-        let shape = CropRegistry.shapeBySide[this.getSide()];
-        Block.setBlockShape(parseInt(this.blockID), shape[0], shape[1]);
         Block.registerDropFunctionForID(parseInt(this.blockID), function(){
             return [];
         });

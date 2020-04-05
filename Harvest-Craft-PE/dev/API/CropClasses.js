@@ -157,8 +157,6 @@ let HarvestcraftSapling = $("HarvestcraftSapling", {
         if(ForestryAPI) this.registerAsFlower(id, 1);
 
         let self = this;
-        let shape = CropRegistry.shapeBySide[this.getSide()];
-        Block.setBlockShape(parseInt(this.blockID), shape[0], shape[1]);
         Block.registerDropFunctionForID(parseInt(this.blockID), function(){
             return [];
         });
