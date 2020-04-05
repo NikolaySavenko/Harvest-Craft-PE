@@ -3,46 +3,46 @@
 	"generation":{
 		"numbers":{
 			"gardens":{
-				"herb":0.05,
-				"grass":0.05,
-				"berry":0.05,
-				"candleberry":0.05,
-				"cotton":0.05,
-				"arid":0.2,
-				"tropical":0.05,
-				"leafy":0.05,
-				"frosty":0.05,
-				"ground":0.05,
-				"stalk":0.05,
-				"gourd":0.05
+				"herb":0.1,
+				"grass":0.1,
+				"berry":0.1,
+				"candleberry":0.1,
+				"cotton":0.1,
+				"arid":0.3,
+				"tropical":0.1,
+				"leafy":0.1,
+				"frosty":0.1,
+				"ground":0.1,
+				"stalk":0.1,
+				"gourd":0.1
 			},
 			"trees":{
-				"apple":0.005,
-				"apricot":0.005,
-				"cherry":0.005,
-				"avocado":0.005,
-				"banana":0.005,
-				"date":0.005,
-				"dragonfruit":0.005,
-				"fig":0.005,
-				"grapefruit":0.005,
-				"gooseberry":0.005,
-				"lemon":0.005,
-				"lime":0.005,
-				"mango":0.005,
-				"olive":0.005,
-				"orange":0.005,
-				"papaya":0.005,
-				"peach":0.005,
-				"pear":0.005,
-				"persimmon":0.005,
-				"plum":0.005,
-				"pomegranate":0.005,
-				"starfruit":0.005,
-				"almond":0.005,
-				"peppercorn":0.005,
-				"cashew":0.005,
-				"coconut":0.005
+				"apple":0.1,
+				"apricot":0.1,
+				"cherry":0.1,
+				"avocado":0.1,
+				"banana":0.1,
+				"date":0.1,
+				"dragonfruit":0.1,
+				"fig":0.1,
+				"grapefruit":0.1,
+				"gooseberry":0.1,
+				"lemon":0.1,
+				"lime":0.1,
+				"mango":0.1,
+				"olive":0.1,
+				"orange":0.1,
+				"papaya":0.1,
+				"peach":0.1,
+				"pear":0.1,
+				"persimmon":0.1,
+				"plum":0.1,
+				"pomegranate":0.1,
+				"starfruit":0.1,
+				"almond":0.1,
+				"peppercorn":0.1,
+				"cashew":0.1,
+				"coconut":0.1
 			},
 			"other":{
 				"salt":0.4
@@ -52,23 +52,23 @@
 			"gardens":{
 				"herb":{
 					"min":1,
-					"max":3
+					"max":7
 				},
 				"grass":{
 					"min":1,
-					"max":3
+					"max":7
 				},
 				"berry":{
 					"min":1,
-					"max":3
+					"max":7
 				},
 				"candleberry":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"cotton":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"arid":{
 					"min":1,
@@ -76,133 +76,133 @@
 				},
 				"tropical":{
 					"min":1,
-					"max":3
+					"max":7
 				},
 				"leafy":{
 					"min":1,
-					"max":3
+					"max":7
 				},
 				"frosty":{
 					"min":1,
-					"max":3
+					"max":7
 				},
 				"ground":{
 					"min":1,
-					"max":3
+					"max":7
 				},
 				"stalk":{
 					"min":1,
-					"max":3
+					"max":7
 				},
 				"gourd":{
 					"min":1,
-					"max":3
+					"max":7
 				}
 			},
 			"trees":{
 				"apple":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"apricot":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"cherry":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"avocado":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"banana":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"date":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"dragonfruit":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"fig":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"grapefruit":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"gooseberry":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"lemon":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"lime":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"mango":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"olive":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"orange":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"papaya":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"peach":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"pear":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"persimmon":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"plum":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"pomegranate":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"starfruit":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"almond":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"peppercorn":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"cashew":{
 					"min":1,
-					"max":2
+					"max":4
 				},
 				"coconut":{
 					"min":1,
-					"max":2
+					"max":4
 				}
 			}
 		}
