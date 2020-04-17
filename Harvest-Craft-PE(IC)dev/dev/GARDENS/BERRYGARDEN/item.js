@@ -1,1 +1,0 @@
-IDRegistry.genItemID("berryGardenITEM");Item.createItem("berryGardenITEM", "Berry garden", {name: "berrygardenBlock", meta: 0} ,{isTech: false} );

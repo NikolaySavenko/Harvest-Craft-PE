@@ -1,1 +1,0 @@
-var FrostyGardenCount = {	min: __config__.access("generation.group.gardens.frosty.min"),	max: __config__.access("generation.group.gardens.frosty.max")};Harvest.addBlockGeneration({id:BlockID.frostygarden, data:0, enabled:true},FrostyGardenBiomes,FrostyGardenCount,__config__.access("generation.numbers.gardens.frosty"));
