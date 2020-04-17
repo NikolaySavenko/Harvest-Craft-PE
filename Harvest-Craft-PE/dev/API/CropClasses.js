@@ -110,15 +110,15 @@ let HarvestcraftSapling = $("HarvestcraftSapling", {
             }
         }
     },
-
+//! emergency crutch. sorry...
     isReadyForFertilize: function(block){
-        if(Math.random() < this.getGrowChanceViaFertilizer()) return true;
+        if(Math.random() < CropsConfig.HarvestcraftSapling.growChance) return true;
         return false;
     },
-
+//! emergency crutch again. sorry...
     randomTick: function(x, y, z){
         this.checkFarmland(x, y, z);
-        if(Math.random() < this.getGrowChance()) this.grow(x, y, z);
+        if(Math.random() < CropsConfig.HarvestcraftSapling.ageSpeed) this.grow(x, y, z);
     },
 
     canGrow: function(x, y, z){

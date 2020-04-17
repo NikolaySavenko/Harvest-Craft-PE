@@ -3,7 +3,7 @@
 //API level: 3.0
 LIBRARY({
     name: "CropLib",
-    version: 1,
+    version: 2,
     shared: true,
     api: "CoreEngine"
 });
@@ -555,6 +555,20 @@ let NormalCrop = $("NormalCrop", {
             self.click(coords, item, block);
         });
 
+        /*Callback.addCallback("BlockChanged", function(coords, oldBlock, newBlock, int1, int2){
+            alert("block chenged");
+            if(oldBlock.id == 60){
+                alert("block 60");
+                let relCoords = World.getRelativeCoords(coords.x, coords.y, coords.z, side);
+                let relBlock = World.getBlock(relCoords.x, relCoords.y, relCoords.z);
+                alert(parseInt(self.blockID) + "  "+ relBlock.id);
+                if(relBlock.id == parseInt(self.blockID)){
+                    World.destroyBlock(relCoords.x, relCoords.y, relCoords.z);
+                    alert("SSSS");
+                }
+            }
+        });*/
+
         Callback.addCallback("DestroyBlock", function(coords, block, player){
             self.destroyBlock(coords, block, player);
         });
@@ -563,11 +577,23 @@ let NormalCrop = $("NormalCrop", {
             self.randomTick(x, y, z);
         });
 
-        Block.setAnimateTickCallback(parseInt(self.blockID), function(x, y, z){
+        /*Block.setAnimateTickCallback(parseInt(self.blockID), function(x, y, z){
             self.checkFarmland(x, y, z, self.getSide());
-        });
+        });*/
     }
 });
+
+//! emergency crutch. sorry...
+World.registerBlockChangeCallback([60], function(coords, oldBlock, newBlock, int1, int2){
+    if(oldBlock.id == 60){
+        let relCoords = World.getRelativeCoords(coords.x, coords.y, coords.z, 1);
+        let relBlock = World.getBlock(relCoords.x, relCoords.y, relCoords.z);
+        if(CropRegistry.isCrop(relBlock.id)){
+            World.destroyBlock(relCoords.x, relCoords.y, relCoords.z);
+        }
+    }
+});
+
 
 EXPORT("CropRegistry", CropRegistry);
 EXPORT("CropInterface", CropInterface);
