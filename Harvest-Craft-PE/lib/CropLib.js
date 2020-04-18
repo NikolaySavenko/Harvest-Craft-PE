@@ -504,7 +504,7 @@ let NormalCrop = $("NormalCrop", {
         if(block.id == parseInt(this.blockID)){
             if(this.canBeHarvested(coords.x, coords.y, coords.z)){
                 this.harvest(coords.x, coords.y, coords.z, true);
-            }else{
+            }else if(this.params.seed){
                 let seed = this.params.seed;
                 World.drop(coords.x, coords.y, coords.z, seed.id, 1, 0);
             }
@@ -555,20 +555,6 @@ let NormalCrop = $("NormalCrop", {
             self.click(coords, item, block);
         });
 
-        /*Callback.addCallback("BlockChanged", function(coords, oldBlock, newBlock, int1, int2){
-            alert("block chenged");
-            if(oldBlock.id == 60){
-                alert("block 60");
-                let relCoords = World.getRelativeCoords(coords.x, coords.y, coords.z, side);
-                let relBlock = World.getBlock(relCoords.x, relCoords.y, relCoords.z);
-                alert(parseInt(self.blockID) + "  "+ relBlock.id);
-                if(relBlock.id == parseInt(self.blockID)){
-                    World.destroyBlock(relCoords.x, relCoords.y, relCoords.z);
-                    alert("SSSS");
-                }
-            }
-        });*/
-
         Callback.addCallback("DestroyBlock", function(coords, block, player){
             self.destroyBlock(coords, block, player);
         });
@@ -576,10 +562,6 @@ let NormalCrop = $("NormalCrop", {
         Block.setRandomTickCallback(parseInt(self.blockID), function(x, y, z){
             self.randomTick(x, y, z);
         });
-
-        /*Block.setAnimateTickCallback(parseInt(self.blockID), function(x, y, z){
-            self.checkFarmland(x, y, z, self.getSide());
-        });*/
     }
 });
 
