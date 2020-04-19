@@ -50,11 +50,13 @@ TileEntity.registerPrototype(BlockID.animalTrap, {
     },
 
     produce: function(){
-        let baitID = this.container.getSlot("slotBait").id;
-        let result = this.swither(baitID);
+        let baitSlot = this.container.getSlot("slotBait");
+        let result = this.swither(baitSlot.id);
+        baitSlot.count--;
         if(this.checker() && result){
             this.putResult(result);
         }
+        this.container.validateAll();
     },
 
     hasGrass: function(){

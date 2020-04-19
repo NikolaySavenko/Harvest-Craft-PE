@@ -3,7 +3,7 @@
 //API level: 3.0
 LIBRARY({
     name: "CropLib",
-    version: 2,
+    version: 3,
     shared: true,
     api: "CoreEngine"
 });
@@ -289,9 +289,9 @@ let HarvestableCrop = $("HarvestableCrop", {
         return blockData >= this.getMaxSize();
     },
 
-    harvest: function(x, y, z, manual){
+    harvest: function(x, y, z, manual, blockData){
         let block = World.getBlock(x, y, z);
-        if(this.canBeHarvested(x, y, z)){
+        if(this.canBeHarvested(x, y, z, blockData)){
             World.setBlock(x, y, z, block.id, this.getSizeAfterHarvest());
             let products = this.getProducts();
             if(manual) this.drop(x, y, z, products);
@@ -484,7 +484,7 @@ let NormalCrop = $("NormalCrop", {
     getGrowChance: function(){return this.growChance},
 
     click: function(coords, item, block){
-        if(this.isFertilizer(item) && !this.canBeHarvested(coords.x, coords.y ,coords.z, block.data)){
+        if(this.isFertilizer(item) && !this.canBeHarvested(coords.x, coords.y ,coords.z)){
             this.emitParticles(coords.x, coords.y ,coords.z);
             if(this.isReadyForFertilize(block)){
                 this.grow(coords.x, coords.y, coords.z);
@@ -500,10 +500,10 @@ let NormalCrop = $("NormalCrop", {
     },
 
     destroyBlock: function(coords, block, player){
-        this.checkFarmlandDestroy(coords, block);
+        //this.checkFarmlandDestroy(coords, block);
         if(block.id == parseInt(this.blockID)){
-            if(this.canBeHarvested(coords.x, coords.y, coords.z)){
-                this.harvest(coords.x, coords.y, coords.z, true);
+            if(this.canBeHarvested(coords.x, coords.y, coords.z, block.data)){
+                this.harvest(coords.x, coords.y, coords.z, true, block.data);
             }else if(this.params.seed){
                 let seed = this.params.seed;
                 World.drop(coords.x, coords.y, coords.z, seed.id, 1, 0);
@@ -572,6 +572,7 @@ World.registerBlockChangeCallback([60], function(coords, oldBlock, newBlock, int
         let relBlock = World.getBlock(relCoords.x, relCoords.y, relCoords.z);
         if(CropRegistry.isCrop(relBlock.id)){
             World.destroyBlock(relCoords.x, relCoords.y, relCoords.z);
+            Callback.invokeCallback("DestroyBlock", relCoords, relBlock, null);
         }
     }
 });
