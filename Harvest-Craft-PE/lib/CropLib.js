@@ -284,9 +284,9 @@ let HarvestableCrop = $("HarvestableCrop", {
         return products;
     },
 
-    canBeHarvested: function(x, y, z){
-        let block = World.getBlock(x, y, z);
-        return block.data >= this.getMaxSize();
+    canBeHarvested: function(x, y, z, blockData){
+        if(!blockData) blockData = World.getBlockData(x, y, z);
+        return blockData >= this.getMaxSize();
     },
 
     harvest: function(x, y, z, manual){
@@ -484,7 +484,7 @@ let NormalCrop = $("NormalCrop", {
     getGrowChance: function(){return this.growChance},
 
     click: function(coords, item, block){
-        if(this.isFertilizer(item) && !this.canBeHarvested(coords.x, coords.y ,coords.z)){
+        if(this.isFertilizer(item) && !this.canBeHarvested(coords.x, coords.y ,coords.z, block.data)){
             this.emitParticles(coords.x, coords.y ,coords.z);
             if(this.isReadyForFertilize(block)){
                 this.grow(coords.x, coords.y, coords.z);

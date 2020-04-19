@@ -116,7 +116,7 @@ var normalGardens2register = [
 ];
 //ARID
 IDRegistry.genItemID("aridgarden");
-Item.createItem("aridgarden", "Arid garden", {name: "aridgarden", meta: 0} ,{});
+Item.createItem("aridgarden", "Arid Garden", {name: "aridgarden", meta: 0} ,{});
 
 CropRegistry.create(HarvestcraftAridGarden, {
     id: "aridgarden",
