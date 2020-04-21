@@ -12,6 +12,15 @@ for(let i = 0; i < 18; i++){
 	elementsForTrap["slot" + i] = {type: "slot", x: 553 + 72*x, y: 103 + 72*y, size: 71, isValid: isValidItemInTrap, bitmap: "slot", isTransparentBackground: true}
 }
 
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.animalTrap, count: 1, data: 0}, [
+		"aya",
+		"rtr",
+		"ara"
+	], ["a", 280, 0, 'r', 287, -1, 't', 54, 0, 'y', 96, -1]);
+});
+
+
 
 var animalTrapGUI = new UI.StandartWindow({
 	standart: {
