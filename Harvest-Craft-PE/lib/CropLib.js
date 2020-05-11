@@ -3,7 +3,7 @@
 //API level: 3.0
 LIBRARY({
     name: "CropLib",
-    version: 3,
+    version: 4,
     shared: true,
     api: "CoreEngine"
 });
@@ -436,6 +436,7 @@ let NormalSapling = $("NormalSapling", {
 
     click: function(coords, item, block){
         if(this.isFertilizer(item)){
+            Player.decreaseCarriedItem(1);
             this.emitParticles(coords.x, coords.y, coords.z);
             if(this.isReadyForFertilize(block)){
                 this.grow(coords.x, coords.y, coords.z);
@@ -484,7 +485,13 @@ let NormalCrop = $("NormalCrop", {
     getGrowChance: function(){return this.growChance},
 
     click: function(coords, item, block){
-        if(this.isFertilizer(item) && !this.canBeHarvested(coords.x, coords.y ,coords.z)){
+        if(this.isFertilizer(item) && !this.canBeHarvested(coords.x, coords.y, coords.z)){
+            //Debug.m(Player.getCarriedItem());
+            // Player.decreaseCarriedItem();
+            Player.setCarriedItem(item.id, item.count - 1, item.data);
+            //Debug.m(Player.getCarriedItem());
+            //TODO FIX item decrease
+            //alert("sda");
             this.emitParticles(coords.x, coords.y ,coords.z);
             if(this.isReadyForFertilize(block)){
                 this.grow(coords.x, coords.y, coords.z);
@@ -565,9 +572,22 @@ let NormalCrop = $("NormalCrop", {
     }
 });
 
+
+//! emergency crutch. sorry...
+World.registerBlockChangeCallback([18], function(coords, oldBlock, newBlock, int1, int2){
+    if(newBlock.id != 18){
+        let relCoords = World.getRelativeCoords(coords.x, coords.y, coords.z, 0);
+        let relBlock = World.getBlock(relCoords.x, relCoords.y, relCoords.z);
+        if(CropRegistry.isCrop(relBlock.id)){
+            World.destroyBlock(relCoords.x, relCoords.y, relCoords.z);
+            Callback.invokeCallback("DestroyBlock", relCoords, relBlock, null);
+        }
+    }
+});
+
 //! emergency crutch. sorry...
 World.registerBlockChangeCallback([60], function(coords, oldBlock, newBlock, int1, int2){
-    if(oldBlock.id == 60){
+    if(newBlock.id != 60){
         let relCoords = World.getRelativeCoords(coords.x, coords.y, coords.z, 1);
         let relBlock = World.getBlock(relCoords.x, relCoords.y, relCoords.z);
         if(CropRegistry.isCrop(relBlock.id)){
