@@ -21,4 +21,4 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: modfile
-          path: Harvest-Craft-PE
+          path: Harvest-Craft-PE/
