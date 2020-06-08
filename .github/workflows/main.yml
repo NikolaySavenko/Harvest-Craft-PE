@@ -15,10 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      #- uses: montudor/action-zip@v0.1.0
-        #with:
-        #  args: zip -qq -r Harvest-Craft-PE.zip Harvest-Craft-PE
+      - run: mkdir modfolder
+      - run: cp -ar Harvest-Craft-PE/ modfolder/
       - uses: actions/upload-artifact@master
         with:
           name: modfile
-          path: Harvest-Craft-PE/
+          path: modfolder/
