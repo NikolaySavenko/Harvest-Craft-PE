@@ -3,7 +3,7 @@
 //API level: 3.0
 LIBRARY({
     name: "CropLib",
-    version: 4,
+    version: 5,
     shared: true,
     api: "CoreEngine"
 });
@@ -22,7 +22,8 @@ var CommonCrop = Block.createSpecialType({
     opaque: false,
     rendertype: RENDER_TYPE_SQUARE,
     lightopacity: 0,
-    destroytime: 0
+    destroytime: 0,
+    sound: "grass"
 });
 
 var CommonSapling = Block.createSpecialType({
@@ -30,7 +31,8 @@ var CommonSapling = Block.createSpecialType({
     opaque: false,
     rendertype: RENDER_TYPE_CROSS,
     lightopacity: 0,
-    destroytime: 0
+    destroytime: 0,
+    sound: "grass"
 });
 
 //Please read docs before use
